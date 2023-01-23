@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\build\westcoasteducation.api.props" />
+</Project>

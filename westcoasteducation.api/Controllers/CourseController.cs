@@ -17,4 +17,40 @@ public class CourseController : ControllerBase
     {
         return Ok(new { message = $"GetById fungerar {id}" });
     }
+
+    [HttpGet("coursenr/{courseNr}")]
+    public ActionResult GetByCourseNumber(string courseNr)
+    {
+        return Ok(new { message = $"GetByCourseNumber fungerar {courseNr}" });
+    }
+
+    [HttpGet("coursename/{courseName}")]
+    public ActionResult GetByCourseName(string courseName)
+    {
+        return Ok(new { message = $"GetByCourseName fungerar {courseName}" });
+    }
+
+    [HttpPost()]
+    public ActionResult AddCourse()
+    {
+        return Created(nameof(GetById), new { message = "AddCourse fungerar" });
+    }
+
+    [HttpPut("{id}")]
+    public ActionResult UpdateCourse(int id)
+    {
+        return NoContent();
+    }
+
+    [HttpDelete("{id}")]
+    public ActionResult DeleteCourse(int id)
+    {
+        return NoContent();
+    }
+
+    [HttpPatch("{id}")]
+    public ActionResult PartialUpdateCourse(int id)
+    {
+        return NoContent();
+    }
 }

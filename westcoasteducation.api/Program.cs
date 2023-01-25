@@ -1,3 +1,6 @@
+using Microsoft.EntityFrameworkCore;
+using westcoasteducation.api.Data;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -8,6 +11,12 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
+
+// Add database support
+builder.Services.AddDbContext<WestCoastEducationContext>(options =>
+{
+    options.UseSqlite(builder.Configuration.GetConnectionString("Sqlite"));
+});
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace westcoasteducation.api.Controllers;
 
 [ApiController]
-[Route("api/v1/students")]
+[Route("api/v1/teachers")]
 public class TeacherController : ControllerBase
 {
     [HttpGet()]

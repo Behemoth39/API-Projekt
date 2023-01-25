@@ -24,10 +24,16 @@ public class CourseController : ControllerBase
         return Ok(new { message = $"GetByCourseNumber fungerar {courseNr}" });
     }
 
-    [HttpGet("coursename/{courseName}")]
-    public ActionResult GetByCourseName(string courseName)
+    [HttpGet("coursetitle/{courseTitle}")]
+    public ActionResult GetByStartDate(string courseTitle)
     {
-        return Ok(new { message = $"GetByCourseName fungerar {courseName}" });
+        return Ok(new { message = $"GetBycourseTitle fungerar {courseTitle}" });
+    }
+
+    [HttpGet("startdate/{startDate}")]
+    public ActionResult GetBystartDate(DateOnly startDate)
+    {
+        return Ok(new { message = $"GetBystartDate fungerar {startDate}" });
     }
 
     [HttpPost()]
@@ -42,15 +48,22 @@ public class CourseController : ControllerBase
         return NoContent();
     }
 
+    [HttpPatch("{id}")]
+    public ActionResult MarkCourseAsFull(int id)
+    {
+        return NoContent();
+    }
+
+    [HttpPatch("{id}")]
+    public ActionResult MarkCourseCompleted(int id)
+    {
+        return NoContent();
+    }
+
     [HttpDelete("{id}")]
     public ActionResult DeleteCourse(int id)
     {
         return NoContent();
     }
 
-    [HttpPatch("{id}")]
-    public ActionResult PartialUpdateCourse(int id)
-    {
-        return NoContent();
-    }
 }

@@ -10,13 +10,14 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-var app = builder.Build();
-
 // Add database support
 builder.Services.AddDbContext<WestCoastEducationContext>(options =>
 {
     options.UseSqlite(builder.Configuration.GetConnectionString("Sqlite"));
 });
+
+var app = builder.Build();
+
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

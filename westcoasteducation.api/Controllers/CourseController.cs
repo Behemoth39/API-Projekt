@@ -19,18 +19,19 @@ public class CourseController : ControllerBase
     public async Task<ActionResult> List()
     {
         var result = await _context.Courses
-        .Include(s => s.Student)
-        .Include(t => t.Teacher)
+        .Include(s => s.Students)
+        .Include(t => t.Teachers)
         .Select(c => new CourseListViewModel
         {
             Id = c.Id,
-            Student = c.Student.StudentEmail ?? "",
-            Teacher = c.Teacher.TeacherEmail ?? "",
             CourseNumber = c.CourseNumber,
             CourseTitle = c.CourseTitle,
             Status = c.Status,
-            CourseStartDate = c.CourseStartDate
-        })
+            CourseStartDate = c.CourseStartDate,
+            Students = c.Students.Select(slv => new StudentListViewModel
+            {
+                StudentEmail = slv.StudentEmail
+            })
         .ToListAsync();
         return Ok(result);
     }

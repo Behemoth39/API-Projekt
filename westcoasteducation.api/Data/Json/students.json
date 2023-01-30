@@ -1,6 +1,7 @@
 [
   {
     "Id": 1,
+    "courseId": 1,
     "socialSecurity": "9802101712",
     "studentEmail": "Hanna-Jansson@StudentMail.com"
   }

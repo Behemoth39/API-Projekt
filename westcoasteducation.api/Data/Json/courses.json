@@ -1,11 +1,9 @@
 [
   {
     "Id": 1,
-    "studentId": 1,
-    "teacherId": 1,
-    "courseNumber": "WE12B",
-    "courseTitle": "WEBDEV",
     "status": null,
-    "courseStartDate": "2022-02-16"
+    "CourseNumber": "WE12B",
+    "CourseTitle": "WEBDEV",
+    "CourseStartDate": "2022-02-16"
   }
 ]

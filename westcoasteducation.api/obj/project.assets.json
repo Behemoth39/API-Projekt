@@ -1752,11 +1752,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\simme\\Documents\\GitHub\\API-Projekt\\westcoasteducation.api\\westcoasteducation.api.csproj",
+      "projectUniqueName": "C:\\Users\\simme\\Documents\\GitHub\\Övningar\\API-Ploj\\westcoasteducation.api.csproj",
       "projectName": "westcoasteducation.api",
-      "projectPath": "C:\\Users\\simme\\Documents\\GitHub\\API-Projekt\\westcoasteducation.api\\westcoasteducation.api.csproj",
+      "projectPath": "C:\\Users\\simme\\Documents\\GitHub\\Övningar\\API-Ploj\\westcoasteducation.api.csproj",
       "packagesPath": "C:\\Users\\simme\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\simme\\Documents\\GitHub\\API-Projekt\\westcoasteducation.api\\obj\\",
+      "outputPath": "C:\\Users\\simme\\Documents\\GitHub\\Övningar\\API-Ploj\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\simme\\AppData\\Roaming\\NuGet\\NuGet.Config"

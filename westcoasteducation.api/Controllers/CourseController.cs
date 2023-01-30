@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using westcoasteducation.api.Data;
+using westcoasteducation.api.Models;
 using westcoasteducation.api.ViewModels;
 
 namespace westcoasteducation.api.Controllers;
@@ -26,12 +27,10 @@ public class CourseController : ControllerBase
             Id = c.Id,
             CourseNumber = c.CourseNumber,
             CourseTitle = c.CourseTitle,
-            Status = c.Status,
             CourseStartDate = c.CourseStartDate,
-            Students = c.Students.Select(slv => new StudentListViewModel
-            {
-                StudentEmail = slv.StudentEmail
-            })
+            //Students = c.Students.Select(slv => new StudentListViewModel { StudentEmail = slv. })  // jag fattar ej
+            //Teachers = c.Teachers.Select(tlv => new TeacherListViewModel {  })
+        })
         .ToListAsync();
         return Ok(result);
     }
@@ -39,32 +38,107 @@ public class CourseController : ControllerBase
     [HttpGet("{id}")]
     public async Task<ActionResult> GetById(int id)
     {
-        var result = await _context.Courses.FindAsync(id);
+        var result = await _context.Courses
+        .Include(s => s.Students)
+        .Include(t => t.Teachers)
+        .Select(c => new CourseDetailListViewModel
+        {
+            Id = c.Id,
+            Status = c.Status,
+            CourseNumber = c.CourseNumber,
+            CourseTitle = c.CourseTitle,
+            CourseStartDate = c.CourseStartDate,
+            //Students = c.Students.Select(slv => new StudentListViewModel { StudentEmail = slv. })  // jag fattar ej
+            //Teachers = c.Teachers.Select(tlv => new TeacherListViewModel {  })
+        })
+        .SingleOrDefaultAsync(C => C.Id == id);
         return Ok(result);
     }
 
     [HttpGet("coursenr/{courseNr}")]
-    public ActionResult GetByCourseNumber(string courseNr)
+    public async Task<ActionResult> GetByCourseNumber(string courseNr)
     {
-        return Ok(new { message = $"GetByCourseNumber fungerar {courseNr}" });
+        var result = await _context.Courses
+        .Include(s => s.Students)
+        .Include(t => t.Teachers)
+        .Select(c => new CourseDetailListViewModel
+        {
+            Id = c.Id,
+            Status = c.Status,
+            CourseNumber = c.CourseNumber,
+            CourseTitle = c.CourseTitle,
+            CourseStartDate = c.CourseStartDate,
+            //Students = c.Students.Select(slv => new StudentListViewModel { StudentEmail = slv. })  // jag fattar ej
+            //Teachers = c.Teachers.Select(tlv => new TeacherListViewModel {  })
+        })
+        .SingleOrDefaultAsync(C => C.CourseNumber!.ToUpper().Trim() == courseNr.ToUpper().Trim());
+        return Ok(result);
     }
 
     [HttpGet("coursetitle/{courseTitle}")]
-    public ActionResult GetByStartDate(string courseTitle)
+    public async Task<ActionResult> GetByTitle(string courseTitle)
     {
-        return Ok(new { message = $"GetBycourseTitle fungerar {courseTitle}" });
+        var result = await _context.Courses
+        .Include(s => s.Students)
+        .Include(t => t.Teachers)
+        .Select(c => new CourseDetailListViewModel
+        {
+            Id = c.Id,
+            Status = c.Status,
+            CourseNumber = c.CourseNumber,
+            CourseTitle = c.CourseTitle,
+            CourseStartDate = c.CourseStartDate,
+            //Students = c.Students.Select(slv => new StudentListViewModel { StudentEmail = slv. })  // jag fattar ej
+            //Teachers = c.Teachers.Select(tlv => new TeacherListViewModel {  })
+        })
+        .SingleOrDefaultAsync(C => C.CourseTitle!.ToUpper().Trim() == courseTitle.ToUpper().Trim());
+        return Ok(result);
     }
 
     [HttpGet("startdate/{startDate}")]
-    public ActionResult GetBystartDate(DateOnly startDate)
+    public async Task<ActionResult> GetBystartDate(DateOnly startDate)
     {
-        return Ok(new { message = $"GetBystartDate fungerar {startDate}" });
+        var result = await _context.Courses
+        .Include(s => s.Students)
+        .Include(t => t.Teachers)
+        .Where(C => C.CourseStartDate == startDate)
+        .Select(c => new CourseDetailListViewModel
+        {
+            Id = c.Id,
+            Status = c.Status,
+            CourseNumber = c.CourseNumber,
+            CourseTitle = c.CourseTitle,
+            CourseStartDate = c.CourseStartDate,
+            //Students = c.Students.Select(slv => new StudentListViewModel { StudentEmail = slv. })  // jag fattar ej
+            //Teachers = c.Teachers.Select(tlv => new TeacherListViewModel {  })
+        })
+        .ToListAsync();
+        return Ok(result);
     }
 
     [HttpPost()]
-    public ActionResult AddCourse()
+    public async Task<ActionResult> AddCourse(CourseAddViewModel model)
     {
-        return Created(nameof(GetById), new { message = "AddCourse fungerar" });
+        if (!ModelState.IsValid) return BadRequest("Information saknas, kontrollera så att allt stämmer");
+
+        var exists = await _context.Courses.SingleOrDefaultAsync(c => c.CourseTitle!.ToUpper().Trim() == model.CourseTitle!.ToUpper().Trim());
+
+        if (exists is not null) return BadRequest($"En kurs med {model.CourseTitle} finns redan");
+
+        var course = new CourseModel
+        {
+            CourseNumber = model.CourseNumber,
+            CourseTitle = model.CourseTitle,
+            CourseStartDate = model.CourseStartDate
+        };
+
+        await _context.Courses.AddAsync(course);
+        if (await _context.SaveChangesAsync() > 0)
+        {
+            return Created(nameof(GetById), new { id = course.Id });
+        }
+
+        return StatusCode(500, "Internal Server Error");
     }
 
     [HttpPut("{id}")]

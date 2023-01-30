@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "S8WIc6UxaZrVqQ+wFfSqqeBEWrLWKGVOiuzQDO4brGDen0l6CvZtzJklkHa6xslawmFXaZb7xUOFKRDHJLj3Mw==",
+  "dgSpecHash": "UAA/jjZ/qD2vcSM8jw11zoR3vmxmpJj8BaryhC4U2dp6hNEWbp8XOcBJ1rQ7f+pcxQa6TrSKZqf90Kyqqxx/gw==",
   "success": true,
-  "projectFilePath": "C:\\Users\\simme\\Documents\\GitHub\\Övningar\\API-Ploj\\westcoasteducation.api.csproj",
+  "projectFilePath": "C:\\Users\\simme\\Documents\\GitHub\\API-Projekt\\westcoasteducation.api\\westcoasteducation.api.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\simme\\.nuget\\packages\\humanizer.core\\2.14.1\\humanizer.core.2.14.1.nupkg.sha512",
     "C:\\Users\\simme\\.nuget\\packages\\microsoft.aspnetcore.openapi\\7.0.1\\microsoft.aspnetcore.openapi.7.0.1.nupkg.sha512",

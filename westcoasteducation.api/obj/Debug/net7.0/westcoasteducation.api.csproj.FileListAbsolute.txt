@@ -66,3 +66,6 @@ C:\Users\simme\Documents\GitHub\API-Projekt\westcoasteducation.api\bin\Debug\net
 C:\Users\simme\Documents\GitHub\API-Projekt\westcoasteducation.api\bin\Debug\net7.0\runtimes\win-arm64\native\e_sqlite3.dll
 C:\Users\simme\Documents\GitHub\API-Projekt\westcoasteducation.api\bin\Debug\net7.0\runtimes\win-x64\native\e_sqlite3.dll
 C:\Users\simme\Documents\GitHub\API-Projekt\westcoasteducation.api\bin\Debug\net7.0\runtimes\win-x86\native\e_sqlite3.dll
+C:\Users\simme\Documents\GitHub\API-Projekt\westcoasteducation.api\bin\Debug\net7.0\Data\Json\courses.json
+C:\Users\simme\Documents\GitHub\API-Projekt\westcoasteducation.api\bin\Debug\net7.0\Data\Json\students.json
+C:\Users\simme\Documents\GitHub\API-Projekt\westcoasteducation.api\bin\Debug\net7.0\Data\Json\teacher.json

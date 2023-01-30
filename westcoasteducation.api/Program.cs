@@ -10,7 +10,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// Add database support
+// Add database support before app builder
 builder.Services.AddDbContext<WestCoastEducationContext>(options =>
 {
     options.UseSqlite(builder.Configuration.GetConnectionString("Sqlite"));
@@ -18,6 +18,22 @@ builder.Services.AddDbContext<WestCoastEducationContext>(options =>
 
 var app = builder.Build();
 
+// Seed database
+using var scope = app.Services.CreateScope();
+var services = scope.ServiceProvider;
+try
+{
+    var context = services.GetRequiredService<WestCoastEducationContext>();
+    await context.Database.MigrateAsync();
+    await SeedData.LoadCourseData(context);
+    await SeedData.LoadStudentData(context);
+    await SeedData.LoadTeacherData(context);
+}
+catch (Exception ex)
+{
+    Console.WriteLine("{0}", ex.Message);
+    throw;
+}
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

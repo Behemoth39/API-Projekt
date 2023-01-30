@@ -6,5 +6,6 @@ public class TeacherModel
 {
     [Key]
     public int Id { get; set; }
+    public int CourseId { get; set; }
     public string? TeacherEmail { get; set; }
 }

@@ -11,8 +11,8 @@ using westcoasteducation.api.Data;
 namespace westcoasteducation.api.Data.Migrations
 {
     [DbContext(typeof(WestCoastEducationContext))]
-    [Migration("20230126160448_Inital")]
-    partial class Inital
+    [Migration("20230130074107_RemadeModels")]
+    partial class RemadeModels
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -32,13 +32,23 @@ namespace westcoasteducation.api.Data.Migrations
                     b.Property<DateOnly?>("CourseStartDate")
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("CourseTitle")
+                        .HasColumnType("TEXT");
+
                     b.Property<int?>("Status")
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("courseTitle")
-                        .HasColumnType("TEXT");
+                    b.Property<int>("StudentId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("TeacherId")
+                        .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("StudentId");
+
+                    b.HasIndex("TeacherId");
 
                     b.ToTable("Courses");
                 });
@@ -72,6 +82,35 @@ namespace westcoasteducation.api.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Teachers");
+                });
+
+            modelBuilder.Entity("westcoasteducation.api.Models.CourseModel", b =>
+                {
+                    b.HasOne("westcoasteducation.api.Models.StudentModel", "Student")
+                        .WithMany("Courses")
+                        .HasForeignKey("StudentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("westcoasteducation.api.Models.TeacherModel", "Teacher")
+                        .WithMany("Courses")
+                        .HasForeignKey("TeacherId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Student");
+
+                    b.Navigation("Teacher");
+                });
+
+            modelBuilder.Entity("westcoasteducation.api.Models.StudentModel", b =>
+                {
+                    b.Navigation("Courses");
+                });
+
+            modelBuilder.Entity("westcoasteducation.api.Models.TeacherModel", b =>
+                {
+                    b.Navigation("Courses");
                 });
 #pragma warning restore 612, 618
         }

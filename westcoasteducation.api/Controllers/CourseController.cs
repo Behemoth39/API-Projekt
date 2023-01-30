@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using westcoasteducation.api.Data;
+using westcoasteducation.api.ViewModels;
 
 namespace westcoasteducation.api.Controllers;
 
@@ -17,7 +18,20 @@ public class CourseController : ControllerBase
     [HttpGet()]
     public async Task<ActionResult> List()
     {
-        var result = await _context.Courses.ToListAsync();
+        var result = await _context.Courses
+        .Include(s => s.Student)
+        .Include(t => t.Teacher)
+        .Select(c => new CourseListViewModel
+        {
+            Id = c.Id,
+            Student = c.Student.StudentEmail ?? "",
+            Teacher = c.Teacher.TeacherEmail ?? "",
+            CourseNumber = c.CourseNumber,
+            CourseTitle = c.CourseTitle,
+            Status = c.Status,
+            CourseStartDate = c.CourseStartDate
+        })
+        .ToListAsync();
         return Ok(result);
     }
 

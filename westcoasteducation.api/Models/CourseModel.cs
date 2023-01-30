@@ -10,4 +10,7 @@ public class CourseModel
     public string? CourseNumber { get; set; }
     public string? CourseTitle { get; set; }
     public DateOnly? CourseStartDate { get; set; }
+
+    public ICollection<StudentModel>? Students { get; set; }
+    public ICollection<TeacherModel>? Teachers { get; set; }
 }

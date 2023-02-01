@@ -1,6 +1,5 @@
 namespace westcoasteducation.api.ViewModels;
 
-public class TeacherListViewModel
+public class TeacherListViewModel : PersonViewModel
 {
-    public string? TeacherEmail { get; set; }
 }

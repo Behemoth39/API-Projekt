@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace westcoasteducation.api.Models;
 
@@ -11,6 +12,11 @@ public class CourseModel
     public string? CourseTitle { get; set; }
     public DateOnly? CourseStartDate { get; set; }
 
-    public ICollection<StudentModel>? Students { get; set; }
-    public ICollection<TeacherModel>? Teachers { get; set; }
+    public Guid? TeacherId { get; set; }
+
+    [ForeignKey("TeacherId")]
+    public TeacherModel Teacher { get; set; } = new TeacherModel();
+
+    public IList<StudentModel>? Students { get; set; }
+
 }

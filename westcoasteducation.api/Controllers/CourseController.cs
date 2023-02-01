@@ -21,15 +21,12 @@ public class CourseController : ControllerBase
     {
         var result = await _context.Courses
         .Include(s => s.Students)
-        .Include(t => t.Teachers)
         .Select(c => new CourseListViewModel
         {
-            Id = c.Id,
-            CourseNumber = c.CourseNumber,
             CourseTitle = c.CourseTitle,
             CourseStartDate = c.CourseStartDate,
-            Students = c.Students!.Select(slv => new StudentListViewModel { StudentEmail = slv.StudentEmail }).ToList(),
-            Teachers = c.Teachers!.Select(tlv => new TeacherListViewModel { TeacherEmail = tlv.TeacherEmail }).ToList()
+            Teacher = c.Teacher.Email,
+            Students = c.Students!.Select(slv => new StudentListViewModel { Email = slv.Email }).ToList(),
         })
         .ToListAsync();
         return Ok(result);
@@ -40,7 +37,6 @@ public class CourseController : ControllerBase
     {
         var result = await _context.Courses
         .Include(s => s.Students)
-        .Include(t => t.Teachers)
         .Select(c => new CourseDetailListViewModel
         {
             Id = c.Id,
@@ -48,8 +44,7 @@ public class CourseController : ControllerBase
             CourseNumber = c.CourseNumber,
             CourseTitle = c.CourseTitle,
             CourseStartDate = c.CourseStartDate,
-            Students = c.Students!.Select(slv => new StudentListViewModel { StudentEmail = slv.StudentEmail }).ToList(),
-            Teachers = c.Teachers!.Select(tlv => new TeacherListViewModel { TeacherEmail = tlv.TeacherEmail }).ToList()
+            Students = c.Students!.Select(slv => new StudentListViewModel { Email = slv.Email }).ToList()
         })
         .SingleOrDefaultAsync(C => C.Id == id);
         return Ok(result);
@@ -60,7 +55,6 @@ public class CourseController : ControllerBase
     {
         var result = await _context.Courses
         .Include(s => s.Students)
-        .Include(t => t.Teachers)
         .Select(c => new CourseDetailListViewModel
         {
             Id = c.Id,
@@ -68,8 +62,7 @@ public class CourseController : ControllerBase
             CourseNumber = c.CourseNumber,
             CourseTitle = c.CourseTitle,
             CourseStartDate = c.CourseStartDate,
-            Students = c.Students!.Select(slv => new StudentListViewModel { StudentEmail = slv.StudentEmail }).ToList(),
-            Teachers = c.Teachers!.Select(tlv => new TeacherListViewModel { TeacherEmail = tlv.TeacherEmail }).ToList()
+            Students = c.Students!.Select(slv => new StudentListViewModel { Email = slv.Email }).ToList()
         })
         .SingleOrDefaultAsync(C => C.CourseNumber!.ToUpper().Trim() == courseNr.ToUpper().Trim());
         return Ok(result);
@@ -80,7 +73,6 @@ public class CourseController : ControllerBase
     {
         var result = await _context.Courses
         .Include(s => s.Students)
-        .Include(t => t.Teachers)
         .Select(c => new CourseDetailListViewModel
         {
             Id = c.Id,
@@ -88,8 +80,7 @@ public class CourseController : ControllerBase
             CourseNumber = c.CourseNumber,
             CourseTitle = c.CourseTitle,
             CourseStartDate = c.CourseStartDate,
-            Students = c.Students!.Select(slv => new StudentListViewModel { StudentEmail = slv.StudentEmail }).ToList(),
-            Teachers = c.Teachers!.Select(tlv => new TeacherListViewModel { TeacherEmail = tlv.TeacherEmail }).ToList()
+            Students = c.Students!.Select(slv => new StudentListViewModel { Email = slv.Email }).ToList()
         })
         .SingleOrDefaultAsync(C => C.CourseTitle!.ToUpper().Trim() == courseTitle.ToUpper().Trim());
         return Ok(result);
@@ -100,7 +91,6 @@ public class CourseController : ControllerBase
     {
         var result = await _context.Courses
         .Include(s => s.Students)
-        .Include(t => t.Teachers)
         .Where(C => C.CourseStartDate == startDate)
         .Select(c => new CourseDetailListViewModel
         {
@@ -109,8 +99,7 @@ public class CourseController : ControllerBase
             CourseNumber = c.CourseNumber,
             CourseTitle = c.CourseTitle,
             CourseStartDate = c.CourseStartDate,
-            Students = c.Students!.Select(slv => new StudentListViewModel { StudentEmail = slv.StudentEmail }).ToList(),
-            Teachers = c.Teachers!.Select(tlv => new TeacherListViewModel { TeacherEmail = tlv.TeacherEmail }).ToList()
+            Students = c.Students!.Select(slv => new StudentListViewModel { Email = slv.Email }).ToList()
         })
         .ToListAsync();
         return Ok(result);
@@ -162,22 +151,50 @@ public class CourseController : ControllerBase
         return StatusCode(500, "Internal Server Error");
     }
 
-    [HttpPatch("{id}")]
-    public ActionResult MarkCourseAsFull(int id)
+    [HttpPatch("full/{id}")]
+    public async Task<ActionResult> MarkCourseAsFull(int id)
     {
-        return NoContent();
+        var course = await _context.Courses.FindAsync(id);
+        if (course is null) return NotFound($"Finns ingen kurs med id: {id}");
+        course.Status = CourseStatusEnum.Full;
+
+        _context.Courses.Update(course);
+        if (await _context.SaveChangesAsync() > 0)
+        {
+            return NoContent();
+        }
+
+        return StatusCode(500, "Internal Server Error");
     }
 
-    [HttpPatch("{id}")]
-    public ActionResult MarkCourseCompleted(int id)
+    [HttpPatch("completed/{id}")]
+    public async Task<ActionResult> MarkCourseCompleted(int id)
     {
-        return NoContent();
+        var course = await _context.Courses.FindAsync(id);
+        if (course is null) return NotFound($"Finns ingen kurs med id: {id}");
+        course.Status = CourseStatusEnum.Completed;
+
+        _context.Courses.Update(course);
+        if (await _context.SaveChangesAsync() > 0)
+        {
+            return NoContent();
+        }
+
+        return StatusCode(500, "Internal Server Error");
     }
 
     [HttpDelete("{id}")]
-    public ActionResult DeleteCourse(int id)
+    public async Task<ActionResult> DeleteCourse(int id)
     {
-        return NoContent();
-    }
+        var course = await _context.Courses.FindAsync(id);
+        if (course is null) return NotFound($"Finns ingen kurs med id: {id}");
 
+        _context.Courses.Remove(course);
+        if (await _context.SaveChangesAsync() > 0)
+        {
+            return NoContent();
+        }
+
+        return StatusCode(500, "Internal Server Error");
+    }
 }

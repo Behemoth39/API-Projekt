@@ -28,8 +28,8 @@ public class CourseController : ControllerBase
             CourseNumber = c.CourseNumber,
             CourseTitle = c.CourseTitle,
             CourseStartDate = c.CourseStartDate,
-            //Students = c.Students.Select(slv => new StudentListViewModel { StudentEmail = slv. })  // jag fattar ej
-            //Teachers = c.Teachers.Select(tlv => new TeacherListViewModel {  })
+            Students = c.Students!.Select(slv => new StudentListViewModel { StudentEmail = slv.StudentEmail }).ToList(),
+            Teachers = c.Teachers!.Select(tlv => new TeacherListViewModel { TeacherEmail = tlv.TeacherEmail }).ToList()
         })
         .ToListAsync();
         return Ok(result);
@@ -48,8 +48,8 @@ public class CourseController : ControllerBase
             CourseNumber = c.CourseNumber,
             CourseTitle = c.CourseTitle,
             CourseStartDate = c.CourseStartDate,
-            //Students = c.Students.Select(slv => new StudentListViewModel { StudentEmail = slv. })  // jag fattar ej
-            //Teachers = c.Teachers.Select(tlv => new TeacherListViewModel {  })
+            Students = c.Students!.Select(slv => new StudentListViewModel { StudentEmail = slv.StudentEmail }).ToList(),
+            Teachers = c.Teachers!.Select(tlv => new TeacherListViewModel { TeacherEmail = tlv.TeacherEmail }).ToList()
         })
         .SingleOrDefaultAsync(C => C.Id == id);
         return Ok(result);
@@ -68,8 +68,8 @@ public class CourseController : ControllerBase
             CourseNumber = c.CourseNumber,
             CourseTitle = c.CourseTitle,
             CourseStartDate = c.CourseStartDate,
-            //Students = c.Students.Select(slv => new StudentListViewModel { StudentEmail = slv. })  // jag fattar ej
-            //Teachers = c.Teachers.Select(tlv => new TeacherListViewModel {  })
+            Students = c.Students!.Select(slv => new StudentListViewModel { StudentEmail = slv.StudentEmail }).ToList(),
+            Teachers = c.Teachers!.Select(tlv => new TeacherListViewModel { TeacherEmail = tlv.TeacherEmail }).ToList()
         })
         .SingleOrDefaultAsync(C => C.CourseNumber!.ToUpper().Trim() == courseNr.ToUpper().Trim());
         return Ok(result);
@@ -88,8 +88,8 @@ public class CourseController : ControllerBase
             CourseNumber = c.CourseNumber,
             CourseTitle = c.CourseTitle,
             CourseStartDate = c.CourseStartDate,
-            //Students = c.Students.Select(slv => new StudentListViewModel { StudentEmail = slv. })  // jag fattar ej
-            //Teachers = c.Teachers.Select(tlv => new TeacherListViewModel {  })
+            Students = c.Students!.Select(slv => new StudentListViewModel { StudentEmail = slv.StudentEmail }).ToList(),
+            Teachers = c.Teachers!.Select(tlv => new TeacherListViewModel { TeacherEmail = tlv.TeacherEmail }).ToList()
         })
         .SingleOrDefaultAsync(C => C.CourseTitle!.ToUpper().Trim() == courseTitle.ToUpper().Trim());
         return Ok(result);
@@ -109,8 +109,8 @@ public class CourseController : ControllerBase
             CourseNumber = c.CourseNumber,
             CourseTitle = c.CourseTitle,
             CourseStartDate = c.CourseStartDate,
-            //Students = c.Students.Select(slv => new StudentListViewModel { StudentEmail = slv. })  // jag fattar ej
-            //Teachers = c.Teachers.Select(tlv => new TeacherListViewModel {  })
+            Students = c.Students!.Select(slv => new StudentListViewModel { StudentEmail = slv.StudentEmail }).ToList(),
+            Teachers = c.Teachers!.Select(tlv => new TeacherListViewModel { TeacherEmail = tlv.TeacherEmail }).ToList()
         })
         .ToListAsync();
         return Ok(result);
@@ -142,9 +142,24 @@ public class CourseController : ControllerBase
     }
 
     [HttpPut("{id}")]
-    public ActionResult UpdateCourse(int id)
+    public async Task<ActionResult> UpdateCourse(int id, CourseUpdateViewModel model)
     {
-        return NoContent();
+        if (!ModelState.IsValid) return BadRequest("Information saknas");
+
+        var course = await _context.Courses.FindAsync(id);
+        if (course is null) return BadRequest($"En kurs med {model.CourseTitle} finns inte");
+
+        course.CourseNumber = model.CourseNumber;
+        course.CourseTitle = model.CourseTitle;
+        course.CourseStartDate = model.CourseStartDate;
+
+        _context.Courses.Update(course);
+        if (await _context.SaveChangesAsync() > 0)
+        {
+            return NoContent();
+        }
+
+        return StatusCode(500, "Internal Server Error");
     }
 
     [HttpPatch("{id}")]

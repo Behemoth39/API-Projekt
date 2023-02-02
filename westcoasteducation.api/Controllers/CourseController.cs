@@ -20,7 +20,7 @@ public class CourseController : ControllerBase
     public async Task<ActionResult> List()
     {
         var result = await _context.Courses
-        .Include(s => s.Students)
+        .Include(t => t.Teacher)
         .Select(c => new CourseListViewModel
         {
             CourseTitle = c.CourseTitle,
@@ -36,7 +36,7 @@ public class CourseController : ControllerBase
     public async Task<ActionResult> GetById(int id)
     {
         var result = await _context.Courses
-        .Include(s => s.Students)
+        .Include(t => t.Teacher)
         .Select(c => new CourseDetailListViewModel
         {
             Id = c.Id,
@@ -44,6 +44,7 @@ public class CourseController : ControllerBase
             CourseNumber = c.CourseNumber,
             CourseTitle = c.CourseTitle,
             CourseStartDate = c.CourseStartDate,
+            Teacher = c.Teacher.Email,
             Students = c.Students!.Select(slv => new StudentListViewModel { Email = slv.Email }).ToList()
         })
         .SingleOrDefaultAsync(C => C.Id == id);
@@ -54,7 +55,7 @@ public class CourseController : ControllerBase
     public async Task<ActionResult> GetByCourseNumber(string courseNr)
     {
         var result = await _context.Courses
-        .Include(s => s.Students)
+        .Include(t => t.Teacher)
         .Select(c => new CourseDetailListViewModel
         {
             Id = c.Id,
@@ -62,6 +63,7 @@ public class CourseController : ControllerBase
             CourseNumber = c.CourseNumber,
             CourseTitle = c.CourseTitle,
             CourseStartDate = c.CourseStartDate,
+            Teacher = c.Teacher.Email,
             Students = c.Students!.Select(slv => new StudentListViewModel { Email = slv.Email }).ToList()
         })
         .SingleOrDefaultAsync(C => C.CourseNumber!.ToUpper().Trim() == courseNr.ToUpper().Trim());
@@ -72,7 +74,7 @@ public class CourseController : ControllerBase
     public async Task<ActionResult> GetByTitle(string courseTitle)
     {
         var result = await _context.Courses
-        .Include(s => s.Students)
+        .Include(t => t.Teacher)
         .Select(c => new CourseDetailListViewModel
         {
             Id = c.Id,
@@ -80,6 +82,7 @@ public class CourseController : ControllerBase
             CourseNumber = c.CourseNumber,
             CourseTitle = c.CourseTitle,
             CourseStartDate = c.CourseStartDate,
+            Teacher = c.Teacher.Email,
             Students = c.Students!.Select(slv => new StudentListViewModel { Email = slv.Email }).ToList()
         })
         .SingleOrDefaultAsync(C => C.CourseTitle!.ToUpper().Trim() == courseTitle.ToUpper().Trim());
@@ -90,7 +93,7 @@ public class CourseController : ControllerBase
     public async Task<ActionResult> GetBystartDate(DateOnly startDate)
     {
         var result = await _context.Courses
-        .Include(s => s.Students)
+        .Include(t => t.Teacher)
         .Where(C => C.CourseStartDate == startDate)
         .Select(c => new CourseDetailListViewModel
         {
@@ -99,6 +102,7 @@ public class CourseController : ControllerBase
             CourseNumber = c.CourseNumber,
             CourseTitle = c.CourseTitle,
             CourseStartDate = c.CourseStartDate,
+            Teacher = c.Teacher.Email,
             Students = c.Students!.Select(slv => new StudentListViewModel { Email = slv.Email }).ToList()
         })
         .ToListAsync();

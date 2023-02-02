@@ -1,7 +1,10 @@
 [
   {
     "Id": 1,
-    "courseId": 1,
-    "teacherEmail": "Emma-Gran@Teachermail.com"
+    "age": 30,
+    "firstName": "Emma",
+    "lastName": "Gran",
+    "email": "Emma-Gran@Teachermail.com",
+    "phone": "0732647422"
   }
 ]

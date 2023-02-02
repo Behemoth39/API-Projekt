@@ -24,6 +24,25 @@ public static class SeedData
         }
     }
 
+    public static async Task LoadQualificationData(WestCoastEducationContext context)
+    {
+        var options = new JsonSerializerOptions
+        {
+            PropertyNameCaseInsensitive = true
+        };
+
+        if (context.Qualifications.Any()) return;
+
+        var json = System.IO.File.ReadAllText("Data/Json/qualifications.json");
+        var qualifications = JsonSerializer.Deserialize<List<QualificationModel>>(json, options);
+
+        if (qualifications is not null && qualifications.Count > 0)
+        {
+            await context.Qualifications.AddRangeAsync(qualifications);
+            await context.SaveChangesAsync();
+        }
+    }
+
     public static async Task LoadStudentData(WestCoastEducationContext context)
     {
         var options = new JsonSerializerOptions

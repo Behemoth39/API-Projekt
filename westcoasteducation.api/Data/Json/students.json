@@ -1,8 +1,11 @@
 [
   {
     "Id": 1,
+    "age": 22,
     "courseId": 1,
-    "socialSecurity": "9802101712",
-    "studentEmail": "Hanna-Jansson@StudentMail.com"
+    "firstName": "Hanna",
+    "lastName": "Jansson",
+    "email": "Hanna-Jansson@StudentMail.com",
+    "phone": "0703667819"
   }
 ]

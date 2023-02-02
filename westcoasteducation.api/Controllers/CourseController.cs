@@ -25,8 +25,8 @@ public class CourseController : ControllerBase
         {
             CourseTitle = c.CourseTitle,
             CourseStartDate = c.CourseStartDate,
-            Teacher = c.Teacher.Email,
-            Students = c.Students!.Select(slv => new StudentListViewModel { Email = slv.Email }).ToList(),
+            Teacher = c.Teacher.FirstName,
+            Students = c.Students!.Select(slv => new StudentListViewModel { FirstName = slv.FirstName }).ToList(),
         })
         .ToListAsync();
         return Ok(result);

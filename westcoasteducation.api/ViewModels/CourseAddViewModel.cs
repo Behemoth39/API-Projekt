@@ -1,5 +1,4 @@
 using System.ComponentModel.DataAnnotations;
-using westcoasteducation.api.Models;
 
 namespace westcoasteducation.api.ViewModels;
 

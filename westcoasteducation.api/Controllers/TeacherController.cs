@@ -1,4 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using westcoasteducation.api.Data;
+using westcoasteducation.api.ViewModels;
 
 namespace westcoasteducation.api.Controllers;
 
@@ -6,10 +9,29 @@ namespace westcoasteducation.api.Controllers;
 [Route("api/v1/teachers")]
 public class TeacherController : ControllerBase
 {
-    [HttpGet()]
-    public ActionResult List()
+
+    public WestCoastEducationContext _context { get; }
+    public TeacherController(WestCoastEducationContext context)
     {
-        return Ok(new { message = "Lista lärare fungerar" });
+        _context = context;
+    }
+
+
+    [HttpGet()]
+    public async Task<ActionResult> List()
+    {
+        var result = await _context.Teachers
+        .Select(t => new TeacherListViewModel
+        {
+            FirstName = t.FirstName,
+            LastName = t.LastName,
+            Email = t.Email,
+            Phone = t.Phone,
+            Courses = t.Courses!.Select(clv => new CourseListViewModel { CourseTitle = clv.CourseTitle }).ToList(),
+            Qualifications = t.Qualifications!.Select(qlv => new QualificationVIewModel { Qualification = qlv.Qualification }).ToList(),
+        })
+        .ToListAsync();
+        return Ok(result);
     }
 
     [HttpGet("{id}")]
@@ -49,8 +71,17 @@ public class TeacherController : ControllerBase
     }
 
     [HttpDelete("{id}")]
-    public ActionResult DeleteStudent(int id)
+    public async Task<ActionResult> DeleteTeacher(int id)
     {
-        return NoContent();
+        var teacher = await _context.Teachers.FindAsync(id);
+        if (teacher is null) return NotFound($"Finns ingen kurs med id: {id}");
+
+        _context.Teachers.Remove(teacher);
+        if (await _context.SaveChangesAsync() > 0)
+        {
+            return NoContent();
+        }
+
+        return StatusCode(500, "Internal Server Error");
     }
 }

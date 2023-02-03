@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using westcoasteducation.api.Data;
 
 namespace westcoasteducation.api.Controllers;
 
@@ -6,6 +7,12 @@ namespace westcoasteducation.api.Controllers;
 [Route("api/v1/students")]
 public class StudentController : ControllerBase
 {
+    public WestCoastEducationContext _context { get; }
+    public StudentController(WestCoastEducationContext context)
+    {
+        _context = context;
+    }
+
     [HttpGet()]
     public ActionResult List()
     {
@@ -50,6 +57,12 @@ public class StudentController : ControllerBase
 
     [HttpPatch("{id}")]
     public ActionResult RegisterToCourse(int id)
+    {
+        return NoContent();
+    }
+
+    [HttpPatch("{id}")]
+    public ActionResult RemoveFromCourse(int id)
     {
         return NoContent();
     }

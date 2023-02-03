@@ -140,3 +140,4 @@ C:\Users\simme\Documents\GitHub\Övningar\API-Ploj\obj\Debug\net7.0\refint\westc
 C:\Users\simme\Documents\GitHub\Övningar\API-Ploj\obj\Debug\net7.0\westcoasteducation.api.pdb
 C:\Users\simme\Documents\GitHub\Övningar\API-Ploj\obj\Debug\net7.0\westcoasteducation.api.genruntimeconfig.cache
 C:\Users\simme\Documents\GitHub\Övningar\API-Ploj\obj\Debug\net7.0\ref\westcoasteducation.api.dll
+C:\Users\simme\Documents\GitHub\API-Projekt\westcoasteducation.api\bin\Debug\net7.0\Data\Json\qualifications.json

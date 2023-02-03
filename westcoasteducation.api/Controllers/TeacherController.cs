@@ -9,13 +9,11 @@ namespace westcoasteducation.api.Controllers;
 [Route("api/v1/teachers")]
 public class TeacherController : ControllerBase
 {
-
     public WestCoastEducationContext _context { get; }
     public TeacherController(WestCoastEducationContext context)
     {
         _context = context;
     }
-
 
     [HttpGet()]
     public async Task<ActionResult> List()
@@ -66,6 +64,24 @@ public class TeacherController : ControllerBase
 
     [HttpPatch("{id}")]
     public ActionResult RegisterToCourse(int id)
+    {
+        return NoContent();
+    }
+
+    [HttpPatch("{id}")]
+    public ActionResult RemoveFromCourse(int id)
+    {
+        return NoContent();
+    }
+
+    [HttpPatch("{id}")]
+    public ActionResult AddQualification(int id)
+    {
+        return NoContent();
+    }
+
+    [HttpPatch("{id}")]
+    public ActionResult RemoveQualification(int id)
     {
         return NoContent();
     }

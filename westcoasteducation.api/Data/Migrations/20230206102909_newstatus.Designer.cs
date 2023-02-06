@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using westcoasteducation.api.Data;
 
@@ -10,9 +11,11 @@ using westcoasteducation.api.Data;
 namespace westcoasteducation.api.Data.Migrations
 {
     [DbContext(typeof(WestCoastEducationContext))]
-    partial class WestCoastEducationContextModelSnapshot : ModelSnapshot
+    [Migration("20230206102909_newstatus")]
+    partial class newstatus
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "7.0.1");
@@ -57,12 +60,7 @@ namespace westcoasteducation.api.Data.Migrations
                     b.Property<string>("Qualification")
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("TeacherId")
-                        .HasColumnType("INTEGER");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("TeacherId");
 
                     b.ToTable("Qualifications");
                 });
@@ -135,17 +133,6 @@ namespace westcoasteducation.api.Data.Migrations
                     b.Navigation("Teacher");
                 });
 
-            modelBuilder.Entity("westcoasteducation.api.Models.QualificationModel", b =>
-                {
-                    b.HasOne("westcoasteducation.api.Models.TeacherModel", "Teacher")
-                        .WithMany("Qualifications")
-                        .HasForeignKey("TeacherId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Teacher");
-                });
-
             modelBuilder.Entity("westcoasteducation.api.Models.StudentModel", b =>
                 {
                     b.HasOne("westcoasteducation.api.Models.CourseModel", "Course")
@@ -165,8 +152,6 @@ namespace westcoasteducation.api.Data.Migrations
             modelBuilder.Entity("westcoasteducation.api.Models.TeacherModel", b =>
                 {
                     b.Navigation("Courses");
-
-                    b.Navigation("Qualifications");
                 });
 #pragma warning restore 612, 618
         }

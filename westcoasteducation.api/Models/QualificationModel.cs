@@ -10,7 +10,5 @@ public class QualificationModel
     public string Qualification { get; set; }
 
     public int TeacherId { get; set; }
-
-    [ForeignKey("TeacherId")]
     public TeacherModel Teacher { get; set; }
 }

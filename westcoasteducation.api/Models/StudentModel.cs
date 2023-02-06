@@ -7,5 +7,5 @@ public class StudentModel : PersonModel
     public int CourseId { get; set; }
 
     [ForeignKey("CourseId")]
-    public CourseModel Course { get; set; } = new CourseModel();
+    public CourseModel Course { get; set; }
 }

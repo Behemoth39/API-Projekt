@@ -20,30 +20,54 @@ public class StudentController : ControllerBase
     public async Task<ActionResult> List()
     {
         var result = await _context.Students
+        .Include(c => c.Course)
         .Select(s => new StudentListViewModel
         {
-            FirstName = s.FirstName
+            Age = s.Age,
+            FirstName = s.FirstName,
+            LastName = s.LastName,
+            Email = s.Email,
+            Phone = s.Phone,
+            Course = s.Course.CourseTitle
         })
         .ToListAsync();
         return Ok(result);
     }
 
     [HttpGet("{id}")]
-    public ActionResult GetById(int id)
+    public async Task<ActionResult> GetById(int id)
     {
-        return Ok(new { message = $"GetById fungerar {id}" });
-    }
-
-    [HttpGet("socialsecurity/{socialSecurity}")]
-    public ActionResult GetBySocialSecurityNumber(string socialSecurity)
-    {
-        return Ok(new { message = $"GetBySocialSecurity fungerar {socialSecurity}" });
+        var result = await _context.Students
+        .Include(c => c.Course)
+        .Select(s => new StudentListViewModel
+        {
+            Age = s.Age,
+            FirstName = s.FirstName,
+            LastName = s.LastName,
+            Email = s.Email,
+            Phone = s.Phone,
+            Course = s.Course.CourseTitle
+        })
+        .SingleOrDefaultAsync(s => s.Id == id);
+        return Ok(result);
     }
 
     [HttpGet("email/{email}")]
-    public ActionResult GetByEmail(string email)
+    public async Task<ActionResult> GetByEmail(string email)
     {
-        return Ok(new { message = $"GetByEmail fungerar {email}" });
+        var result = await _context.Students
+       .Include(c => c.Course)
+       .Select(s => new StudentListViewModel
+       {
+           Age = s.Age,
+           FirstName = s.FirstName,
+           LastName = s.LastName,
+           Email = s.Email,
+           Phone = s.Phone,
+           Course = s.Course.CourseTitle
+       })
+       .SingleOrDefaultAsync(t => t.Email!.ToUpper().Trim() == email.ToUpper().Trim());
+        return Ok(result);
     }
 
     [HttpPost()]
@@ -74,9 +98,26 @@ public class StudentController : ControllerBase
     }
 
     [HttpPut("{id}")]
-    public ActionResult UpdateStudent(int id)
+    public async Task<ActionResult> UpdateStudent(int id, StudentUpdateViewModel model)
     {
-        return NoContent();
+        if (!ModelState.IsValid) return BadRequest("Information saknas");
+
+        var student = await _context.Students.FindAsync(id);
+        if (student is null) return BadRequest($"Studenten {model.FirstName} {model.LastName} finns inte");
+
+        student.Age = model.Age;
+        student.FirstName = model.FirstName;
+        student.LastName = model.LastName;
+        student.Email = model.Email;
+        student.Phone = model.Phone;
+
+        _context.Students.Update(student);
+        if (await _context.SaveChangesAsync() > 0)
+        {
+            return NoContent();
+        }
+
+        return StatusCode(500, "Internal Server Error");
     }
 
     [HttpGet()]
@@ -85,21 +126,50 @@ public class StudentController : ControllerBase
         return Ok(new { message = "Lista anmälda kurser fungerar" });
     }
 
-    [HttpPatch("{id}")]
-    public ActionResult RegisterToCourse(int id)
+    [HttpPatch("registertocourse/{id}")]
+    public async Task<ActionResult> RegisterToCourse(int id) // förmodligen ska en model följa med
     {
-        return NoContent();
+        var student = await _context.Students.FindAsync(id);
+        if (student is null) return NotFound($"Finns ingen student med id: {id}");
+        // sätt värdet här
+
+        _context.Students.Update(student);
+        if (await _context.SaveChangesAsync() > 0)
+        {
+            return NoContent();
+        }
+
+        return StatusCode(500, "Internal Server Error");
     }
 
-    [HttpPatch("{id}")]
-    public ActionResult RemoveFromCourse(int id)
+    [HttpPatch("removefromcourse/{id}")]
+    public async Task<ActionResult> RemoveFromCourse(int id) // förmodligen ska en model följa med
     {
-        return NoContent();
+        var student = await _context.Students.FindAsync(id);
+        if (student is null) return NotFound($"Finns ingen student med id: {id}");
+        student.CourseId = 0; // sätt värdet här
+
+        _context.Students.Update(student);
+        if (await _context.SaveChangesAsync() > 0)
+        {
+            return NoContent();
+        }
+
+        return StatusCode(500, "Internal Server Error");
     }
 
     [HttpDelete("{id}")]
-    public ActionResult DeleteStudent(int id)
+    public async Task<ActionResult> DeleteStudent(int id)
     {
-        return NoContent();
+        var student = await _context.Students.FindAsync(id);
+        if (student is null) return NotFound($"Finns ingen student med id: {id}");
+
+        _context.Students.Remove(student);
+        if (await _context.SaveChangesAsync() > 0)
+        {
+            return NoContent();
+        }
+
+        return StatusCode(500, "Internal Server Error");
     }
 }

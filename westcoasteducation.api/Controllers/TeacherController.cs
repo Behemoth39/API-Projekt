@@ -22,6 +22,7 @@ public class TeacherController : ControllerBase
         var result = await _context.Teachers
         .Select(t => new TeacherListViewModel
         {
+            Age = t.Age,
             FirstName = t.FirstName,
             LastName = t.LastName,
             Email = t.Email,
@@ -34,15 +35,39 @@ public class TeacherController : ControllerBase
     }
 
     [HttpGet("{id}")]
-    public ActionResult GetById(int id)
+    public async Task<ActionResult> GetById(int id)
     {
-        return Ok(new { message = $"GetById fungerar {id}" });
+        var result = await _context.Teachers
+        .Select(t => new TeacherListViewModel
+        {
+            Age = t.Age,
+            FirstName = t.FirstName,
+            LastName = t.LastName,
+            Email = t.Email,
+            Phone = t.Phone,
+            Courses = t.Courses!.Select(clv => new CourseListViewModel { CourseTitle = clv.CourseTitle }).ToList(),
+            Qualifications = t.Qualifications!.Select(qlv => new QualificationVIewModel { Qualification = qlv.Qualification }).ToList(),
+        })
+        .SingleOrDefaultAsync(t => t.Id == id);
+        return Ok(result);
     }
 
     [HttpGet("email/{email}")]
-    public ActionResult GetByEmail(string email)
+    public async Task<ActionResult> GetByEmail(string email)
     {
-        return Ok(new { message = $"GetByEmail fungerar {email}" });
+        var result = await _context.Teachers
+        .Select(t => new TeacherListViewModel
+        {
+            Age = t.Age,
+            FirstName = t.FirstName,
+            LastName = t.LastName,
+            Email = t.Email,
+            Phone = t.Phone,
+            Courses = t.Courses!.Select(clv => new CourseListViewModel { CourseTitle = clv.CourseTitle }).ToList(),
+            Qualifications = t.Qualifications!.Select(qlv => new QualificationVIewModel { Qualification = qlv.Qualification }).ToList(),
+        })
+        .SingleOrDefaultAsync(t => t.Email!.ToUpper().Trim() == email.ToUpper().Trim());
+        return Ok(result);
     }
 
     [HttpPost()]
@@ -73,9 +98,26 @@ public class TeacherController : ControllerBase
     }
 
     [HttpPut("{id}")]
-    public ActionResult UpdateTeacher(int id)
+    public async Task<ActionResult> UpdateTeacher(int id, TeacherUpdateViewModel model)
     {
-        return NoContent();
+        if (!ModelState.IsValid) return BadRequest("Information saknas");
+
+        var teacher = await _context.Teachers.FindAsync(id);
+        if (teacher is null) return BadRequest($"Läraren {model.FirstName} {model.LastName} finns inte");
+
+        teacher.Age = model.Age;
+        teacher.FirstName = model.FirstName;
+        teacher.LastName = model.LastName;
+        teacher.Email = model.Email;
+        teacher.Phone = model.Phone;
+
+        _context.Teachers.Update(teacher);
+        if (await _context.SaveChangesAsync() > 0)
+        {
+            return NoContent();
+        }
+
+        return StatusCode(500, "Internal Server Error");
     }
 
     [HttpGet()]
@@ -92,18 +134,6 @@ public class TeacherController : ControllerBase
 
     [HttpPatch("{id}")]
     public ActionResult RemoveFromCourse(int id)
-    {
-        return NoContent();
-    }
-
-    [HttpPatch("{id}")]
-    public ActionResult AddQualification(int id)
-    {
-        return NoContent();
-    }
-
-    [HttpPatch("{id}")]
-    public ActionResult RemoveQualification(int id)
     {
         return NoContent();
     }

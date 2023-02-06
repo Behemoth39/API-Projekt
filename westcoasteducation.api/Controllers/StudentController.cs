@@ -147,7 +147,7 @@ public class StudentController : ControllerBase
     {
         var student = await _context.Students.FindAsync(id);
         if (student is null) return NotFound($"Finns ingen student med id: {id}");
-        student.CourseId = 0; // sätt värdet här
+        student.CourseId = null; // sätt värdet här
 
         _context.Students.Update(student);
         if (await _context.SaveChangesAsync() > 0)

@@ -57,12 +57,12 @@ namespace westcoasteducation.api.Data.Migrations
                     b.Property<string>("Qualification")
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("TeacherId")
+                    b.Property<int?>("TeacherModelId")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("TeacherId");
+                    b.HasIndex("TeacherModelId");
 
                     b.ToTable("Qualifications");
                 });
@@ -137,13 +137,9 @@ namespace westcoasteducation.api.Data.Migrations
 
             modelBuilder.Entity("westcoasteducation.api.Models.QualificationModel", b =>
                 {
-                    b.HasOne("westcoasteducation.api.Models.TeacherModel", "Teacher")
+                    b.HasOne("westcoasteducation.api.Models.TeacherModel", null)
                         .WithMany("Qualifications")
-                        .HasForeignKey("TeacherId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Teacher");
+                        .HasForeignKey("TeacherModelId");
                 });
 
             modelBuilder.Entity("westcoasteducation.api.Models.StudentModel", b =>

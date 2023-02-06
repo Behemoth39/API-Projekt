@@ -13,10 +13,9 @@ public class CourseModel
     public DateOnly CourseStartDate { get; set; }
     public DateOnly CourseEndDate { get; set; }
 
-    public int TeacherId { get; set; }
+    public IList<StudentModel> Students { get; set; }
 
+    public int TeacherId { get; set; }
     [ForeignKey("TeacherId")]
     public TeacherModel Teacher { get; set; }
-
-    public IList<StudentModel> Students { get; set; }
 }

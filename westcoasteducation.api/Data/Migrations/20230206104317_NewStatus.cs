@@ -5,45 +5,43 @@
 namespace westcoasteducation.api.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class qualiRel : Migration
+    public partial class NewStatus : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AddColumn<int>(
-                name: "TeacherId",
+                name: "TeacherModelId",
                 table: "Qualifications",
                 type: "INTEGER",
-                nullable: false,
-                defaultValue: 0);
+                nullable: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Qualifications_TeacherId",
+                name: "IX_Qualifications_TeacherModelId",
                 table: "Qualifications",
-                column: "TeacherId");
+                column: "TeacherModelId");
 
             migrationBuilder.AddForeignKey(
-                name: "FK_Qualifications_Teachers_TeacherId",
+                name: "FK_Qualifications_Teachers_TeacherModelId",
                 table: "Qualifications",
-                column: "TeacherId",
+                column: "TeacherModelId",
                 principalTable: "Teachers",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Cascade);
+                principalColumn: "Id");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropForeignKey(
-                name: "FK_Qualifications_Teachers_TeacherId",
+                name: "FK_Qualifications_Teachers_TeacherModelId",
                 table: "Qualifications");
 
             migrationBuilder.DropIndex(
-                name: "IX_Qualifications_TeacherId",
+                name: "IX_Qualifications_TeacherModelId",
                 table: "Qualifications");
 
             migrationBuilder.DropColumn(
-                name: "TeacherId",
+                name: "TeacherModelId",
                 table: "Qualifications");
         }
     }

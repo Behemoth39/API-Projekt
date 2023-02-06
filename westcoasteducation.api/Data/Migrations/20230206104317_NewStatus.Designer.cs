@@ -11,8 +11,8 @@ using westcoasteducation.api.Data;
 namespace westcoasteducation.api.Data.Migrations
 {
     [DbContext(typeof(WestCoastEducationContext))]
-    [Migration("20230206102909_newstatus")]
-    partial class newstatus
+    [Migration("20230206104317_NewStatus")]
+    partial class NewStatus
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -60,7 +60,12 @@ namespace westcoasteducation.api.Data.Migrations
                     b.Property<string>("Qualification")
                         .HasColumnType("TEXT");
 
+                    b.Property<int?>("TeacherModelId")
+                        .HasColumnType("INTEGER");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("TeacherModelId");
 
                     b.ToTable("Qualifications");
                 });
@@ -133,6 +138,13 @@ namespace westcoasteducation.api.Data.Migrations
                     b.Navigation("Teacher");
                 });
 
+            modelBuilder.Entity("westcoasteducation.api.Models.QualificationModel", b =>
+                {
+                    b.HasOne("westcoasteducation.api.Models.TeacherModel", null)
+                        .WithMany("Qualifications")
+                        .HasForeignKey("TeacherModelId");
+                });
+
             modelBuilder.Entity("westcoasteducation.api.Models.StudentModel", b =>
                 {
                     b.HasOne("westcoasteducation.api.Models.CourseModel", "Course")
@@ -152,6 +164,8 @@ namespace westcoasteducation.api.Data.Migrations
             modelBuilder.Entity("westcoasteducation.api.Models.TeacherModel", b =>
                 {
                     b.Navigation("Courses");
+
+                    b.Navigation("Qualifications");
                 });
 #pragma warning restore 612, 618
         }

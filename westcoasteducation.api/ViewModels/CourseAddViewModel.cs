@@ -12,4 +12,7 @@ public class CourseAddViewModel
 
     [Required(ErrorMessage = "Startdatum måste finnas")]
     public DateOnly CourseStartDate { get; set; }
+
+    [Required(ErrorMessage = "Slutdatum måste finnas")]
+    public DateOnly CourseEndDate { get; set; }
 }

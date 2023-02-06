@@ -2,43 +2,36 @@
   {
     "Id": 1,
     "teacherId": 1,
-    "qualification": "Programming",
-    "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed nec ipsum sit amet nulla dictum pulvinar. Pellentesque ut risus nec leo semper vestibulum. Nulla sit amet finibus tellus. Pellentesque viverra tempor neque, convallis iaculis sem dignissim id."
+    "qualification": "Programming"
   },
   {
     "Id": 2,
     "teacherId": 1,
-    "qualification": "Business",
-    "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed nec ipsum sit amet nulla dictum pulvinar. Pellentesque ut risus nec leo semper vestibulum. Nulla sit amet finibus tellus. Pellentesque viverra tempor neque, convallis iaculis sem dignissim id."
+    "qualification": "Business"
   },
   {
     "Id": 3,
     "teacherId": 2,
-    "qualification": "Welding",
-    "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed nec ipsum sit amet nulla dictum pulvinar. Pellentesque ut risus nec leo semper vestibulum. Nulla sit amet finibus tellus. Pellentesque viverra tempor neque, convallis iaculis sem dignissim id."
+    "qualification": "Welding"
   },
   {
     "Id": 4,
     "teacherId": 2,
-    "qualification": "Technician",
-    "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed nec ipsum sit amet nulla dictum pulvinar. Pellentesque ut risus nec leo semper vestibulum. Nulla sit amet finibus tellus. Pellentesque viverra tempor neque, convallis iaculis sem dignissim id."
+    "qualification": "Technician"
   },
   {
     "Id": 5,
     "teacherId": 3,
-    "qualification": "Plumber",
-    "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed nec ipsum sit amet nulla dictum pulvinar. Pellentesque ut risus nec leo semper vestibulum. Nulla sit amet finibus tellus. Pellentesque viverra tempor neque, convallis iaculis sem dignissim id."
+    "qualification": "Plumber"
   },
   {
     "Id": 6,
     "teacherId": 3,
-    "qualification": "Roofer",
-    "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed nec ipsum sit amet nulla dictum pulvinar. Pellentesque ut risus nec leo semper vestibulum. Nulla sit amet finibus tellus. Pellentesque viverra tempor neque, convallis iaculis sem dignissim id."
+    "qualification": "Roofer"
   },
   {
     "Id": 7,
     "teacherId": 3,
-    "qualification": "Carpenter",
-    "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed nec ipsum sit amet nulla dictum pulvinar. Pellentesque ut risus nec leo semper vestibulum. Nulla sit amet finibus tellus. Pellentesque viverra tempor neque, convallis iaculis sem dignissim id."
+    "qualification": "Carpenter"
   }
 ]

@@ -25,6 +25,7 @@ public class CourseController : ControllerBase
         {
             CourseTitle = c.CourseTitle,
             CourseStartDate = c.CourseStartDate,
+            CourseEndDate = c.CourseEndDate,
             Teacher = c.Teacher.FirstName,
             Students = c.Students!.Select(slv => new StudentListViewModel { FirstName = slv.FirstName }).ToList(),
         })
@@ -44,6 +45,7 @@ public class CourseController : ControllerBase
             CourseNumber = c.CourseNumber,
             CourseTitle = c.CourseTitle,
             CourseStartDate = c.CourseStartDate,
+            CourseEndDate = c.CourseEndDate,
             Teacher = c.Teacher.Email,
             Students = c.Students!.Select(slv => new StudentListViewModel { Email = slv.Email }).ToList()
         })
@@ -63,6 +65,7 @@ public class CourseController : ControllerBase
             CourseNumber = c.CourseNumber,
             CourseTitle = c.CourseTitle,
             CourseStartDate = c.CourseStartDate,
+            CourseEndDate = c.CourseEndDate,
             Teacher = c.Teacher.Email,
             Students = c.Students!.Select(slv => new StudentListViewModel { Email = slv.Email }).ToList()
         })
@@ -82,6 +85,7 @@ public class CourseController : ControllerBase
             CourseNumber = c.CourseNumber,
             CourseTitle = c.CourseTitle,
             CourseStartDate = c.CourseStartDate,
+            CourseEndDate = c.CourseEndDate,
             Teacher = c.Teacher.Email,
             Students = c.Students!.Select(slv => new StudentListViewModel { Email = slv.Email }).ToList()
         })
@@ -102,6 +106,7 @@ public class CourseController : ControllerBase
             CourseNumber = c.CourseNumber,
             CourseTitle = c.CourseTitle,
             CourseStartDate = c.CourseStartDate,
+            CourseEndDate = c.CourseEndDate,
             Teacher = c.Teacher.Email,
             Students = c.Students!.Select(slv => new StudentListViewModel { Email = slv.Email }).ToList()
         })
@@ -122,7 +127,8 @@ public class CourseController : ControllerBase
         {
             CourseNumber = model.CourseNumber,
             CourseTitle = model.CourseTitle,
-            CourseStartDate = model.CourseStartDate
+            CourseStartDate = model.CourseStartDate,
+            CourseEndDate = model.CourseEndDate
         };
 
         await _context.Courses.AddAsync(course);
@@ -145,6 +151,7 @@ public class CourseController : ControllerBase
         course.CourseNumber = model.CourseNumber;
         course.CourseTitle = model.CourseTitle;
         course.CourseStartDate = model.CourseStartDate;
+        course.CourseEndDate = model.CourseEndDate;
 
         _context.Courses.Update(course);
         if (await _context.SaveChangesAsync() > 0)

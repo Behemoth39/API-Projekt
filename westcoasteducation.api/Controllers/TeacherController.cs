@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using westcoasteducation.api.Data;
+using westcoasteducation.api.Models;
 using westcoasteducation.api.ViewModels;
 
 namespace westcoasteducation.api.Controllers;
@@ -45,9 +46,30 @@ public class TeacherController : ControllerBase
     }
 
     [HttpPost()]
-    public ActionResult AddTeacher()
+    public async Task<ActionResult> AddTeacher(TeacherAddViewModel model)
     {
-        return Created(nameof(GetById), new { message = "AddTeacher fungerar" });
+        if (!ModelState.IsValid) return BadRequest("Information saknas, kontrollera så att allt stämmer");
+
+        var exists = await _context.Teachers.SingleOrDefaultAsync(s => s.Email!.ToUpper().Trim() == model.Email!.ToUpper().Trim());
+
+        if (exists is not null) return BadRequest($"En person med email {model.Email} finns redan");
+
+        var teacher = new TeacherModel
+        {
+            Age = model.Age,
+            FirstName = model.FirstName,
+            LastName = model.LastName,
+            Email = model.Email,
+            Phone = model.Phone
+        };
+
+        await _context.Teachers.AddAsync(teacher);
+        if (await _context.SaveChangesAsync() > 0)
+        {
+            return Created(nameof(GetById), new { id = teacher.Id });
+        }
+
+        return StatusCode(500, "Internal Server Error");
     }
 
     [HttpPut("{id}")]

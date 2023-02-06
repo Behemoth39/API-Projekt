@@ -9,7 +9,5 @@ public class QualificationModel
     public int Id { get; set; }
     public string Qualification { get; set; }
 
-    /*[ForeignKey("TeacherId")]
-    public int TeacherId { get; set; }
-    public TeacherModel Teacher { get; set; }*/
+    public IList<TeacherModel> Teachers { get; set; }
 }

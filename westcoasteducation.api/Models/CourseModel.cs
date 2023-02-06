@@ -15,7 +15,8 @@ public class CourseModel
 
     public IList<StudentModel> Students { get; set; }
 
-    public int TeacherId { get; set; }
+    public int? TeacherId { get; set; }
+
     [ForeignKey("TeacherId")]
     public TeacherModel Teacher { get; set; }
 }

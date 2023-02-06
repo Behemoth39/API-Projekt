@@ -7,7 +7,7 @@ using westcoasteducation.api.Data;
 
 #nullable disable
 
-namespace westcoasteducation.api.Data.Migrations
+namespace westcoasteducation.api.Migrations
 {
     [DbContext(typeof(WestCoastEducationContext))]
     partial class WestCoastEducationContextModelSnapshot : ModelSnapshot
@@ -16,6 +16,21 @@ namespace westcoasteducation.api.Data.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "7.0.1");
+
+            modelBuilder.Entity("QualificationModelTeacherModel", b =>
+                {
+                    b.Property<int>("QualificationsId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("TeachersId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("QualificationsId", "TeachersId");
+
+                    b.HasIndex("TeachersId");
+
+                    b.ToTable("QualificationModelTeacherModel");
+                });
 
             modelBuilder.Entity("westcoasteducation.api.Models.CourseModel", b =>
                 {
@@ -38,7 +53,7 @@ namespace westcoasteducation.api.Data.Migrations
                     b.Property<int>("Status")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("TeacherId")
+                    b.Property<int?>("TeacherId")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
@@ -57,12 +72,7 @@ namespace westcoasteducation.api.Data.Migrations
                     b.Property<string>("Qualification")
                         .HasColumnType("TEXT");
 
-                    b.Property<int?>("TeacherModelId")
-                        .HasColumnType("INTEGER");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("TeacherModelId");
 
                     b.ToTable("Qualifications");
                 });
@@ -76,7 +86,7 @@ namespace westcoasteducation.api.Data.Migrations
                     b.Property<int>("Age")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("CourseId")
+                    b.Property<int?>("CourseId")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Email")
@@ -124,31 +134,35 @@ namespace westcoasteducation.api.Data.Migrations
                     b.ToTable("Teachers");
                 });
 
+            modelBuilder.Entity("QualificationModelTeacherModel", b =>
+                {
+                    b.HasOne("westcoasteducation.api.Models.QualificationModel", null)
+                        .WithMany()
+                        .HasForeignKey("QualificationsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("westcoasteducation.api.Models.TeacherModel", null)
+                        .WithMany()
+                        .HasForeignKey("TeachersId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("westcoasteducation.api.Models.CourseModel", b =>
                 {
                     b.HasOne("westcoasteducation.api.Models.TeacherModel", "Teacher")
                         .WithMany("Courses")
-                        .HasForeignKey("TeacherId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("TeacherId");
 
                     b.Navigation("Teacher");
-                });
-
-            modelBuilder.Entity("westcoasteducation.api.Models.QualificationModel", b =>
-                {
-                    b.HasOne("westcoasteducation.api.Models.TeacherModel", null)
-                        .WithMany("Qualifications")
-                        .HasForeignKey("TeacherModelId");
                 });
 
             modelBuilder.Entity("westcoasteducation.api.Models.StudentModel", b =>
                 {
                     b.HasOne("westcoasteducation.api.Models.CourseModel", "Course")
                         .WithMany("Students")
-                        .HasForeignKey("CourseId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("CourseId");
 
                     b.Navigation("Course");
                 });
@@ -161,8 +175,6 @@ namespace westcoasteducation.api.Data.Migrations
             modelBuilder.Entity("westcoasteducation.api.Models.TeacherModel", b =>
                 {
                     b.Navigation("Courses");
-
-                    b.Navigation("Qualifications");
                 });
 #pragma warning restore 612, 618
         }

@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using westcoasteducation.api.Data;
+using westcoasteducation.api.Models;
 using westcoasteducation.api.ViewModels;
 
 namespace westcoasteducation.api.Controllers
@@ -53,27 +54,77 @@ namespace westcoasteducation.api.Controllers
         }
 
         [HttpPost()]
-        public async Task<ActionResult> AddQualification()
+        public async Task<ActionResult> AddQualification(QualificationAddVIewModel model)
         {
-            return NoContent();
+            if (!ModelState.IsValid) return BadRequest("Information saknas, kontrollera så att allt stämmer");
+
+            var exists = await _context.Qualifications.SingleOrDefaultAsync(s => s.Qualification!.ToUpper().Trim() == model.Qualification!.ToUpper().Trim());
+
+            if (exists is not null) return BadRequest($"{model.Qualification} finns redan");
+
+            var qualification = new QualificationModel
+            {
+                Qualification = model.Qualification
+            };
+
+            await _context.Qualifications.AddAsync(qualification);
+            if (await _context.SaveChangesAsync() > 0)
+            {
+                return Created(nameof(GetById), new { id = qualification.Id });
+            }
+
+            return StatusCode(500, "Internal Server Error");
         }
 
         [HttpPut("{id}")]
-        public async Task<ActionResult> UpdateQualification(int id)
+        public async Task<ActionResult> UpdateQualification(int id, QualificationAddVIewModel model)
         {
-            return NoContent();
+            if (!ModelState.IsValid) return BadRequest("Information saknas");
+
+            var qualification = await _context.Qualifications.FindAsync(id);
+            if (qualification is null) return BadRequest($"{model.Qualification} finns inte");
+
+            qualification.Qualification = model.Qualification;
+
+            _context.Qualifications.Update(qualification);
+            if (await _context.SaveChangesAsync() > 0)
+            {
+                return NoContent();
+            }
+
+            return StatusCode(500, "Internal Server Error");
         }
 
         [HttpPatch("{id}")]
-        public ActionResult AddQualificationToTeacher(int id)
+        public async Task<ActionResult> AddQualificationToTeacher(int id) // förmodligen ska en model följa med
         {
-            return NoContent();
+            var qualification = await _context.Qualifications.FindAsync(id);
+            if (qualification is null) return NotFound($"Finns ingen kompetens med id: {id}");
+            // sätt värdet här
+
+            _context.Qualifications.Update(qualification);
+            if (await _context.SaveChangesAsync() > 0)
+            {
+                return NoContent();
+            }
+
+            return StatusCode(500, "Internal Server Error");
         }
 
         [HttpPatch("{id}")]
-        public ActionResult RemoveQualificationFromTeacher(int id)
+        public async Task<ActionResult> RemoveQualificationFromTeacher(int id) // förmodligen ska en model följa med
         {
-            return NoContent();
+            var qualification = await _context.Qualifications.FindAsync(id);
+            if (qualification is null) return NotFound($"Finns ingen kompetens med id: {id}");
+            // sätt värdet här
+
+            _context.Qualifications.Update(qualification);
+            if (await _context.SaveChangesAsync() > 0)
+            {
+                return NoContent();
+            }
+
+            return StatusCode(500, "Internal Server Error");
         }
 
         [HttpDelete("{id}")]

@@ -71,13 +71,13 @@ public class TeacherController : ControllerBase
     }
 
     [HttpPost()]
-    public async Task<ActionResult> AddTeacher(TeacherAddViewModel model)
+    public async Task<ActionResult> AddTeacher(TeacherAddViewModel model) //behövs 2 separata models för update och add
     {
         if (!ModelState.IsValid) return BadRequest("Information saknas, kontrollera så att allt stämmer");
 
         var exists = await _context.Teachers.SingleOrDefaultAsync(s => s.Email!.ToUpper().Trim() == model.Email!.ToUpper().Trim());
 
-        if (exists is not null) return BadRequest($"En person med email {model.Email} finns redan");
+        if (exists is not null) return BadRequest($"En lärare med email {model.Email} finns redan");
 
         var teacher = new TeacherModel
         {
@@ -98,7 +98,7 @@ public class TeacherController : ControllerBase
     }
 
     [HttpPut("{id}")]
-    public async Task<ActionResult> UpdateTeacher(int id, TeacherUpdateViewModel model)
+    public async Task<ActionResult> UpdateTeacher(int id, TeacherUpdateViewModel model) //behövs 2 separata models för update och add
     {
         if (!ModelState.IsValid) return BadRequest("Information saknas");
 

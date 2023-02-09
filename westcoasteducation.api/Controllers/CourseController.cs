@@ -7,7 +7,7 @@ using westcoasteducation.api.ViewModels;
 namespace westcoasteducation.api.Controllers;
 
 [ApiController]
-[Route("api/v1/courses")]
+[Route("api/v1/courses")]  // Alla Get ger ok tillbaka oavsett om det finns data eller ej
 public class CourseController : ControllerBase
 {
     public WestCoastEducationContext _context { get; }
@@ -115,7 +115,7 @@ public class CourseController : ControllerBase
     }
 
     [HttpPost()]
-    public async Task<ActionResult> AddCourse(CourseAddViewModel model)
+    public async Task<ActionResult> AddCourse(CourseAddUpdateViewModel model)
     {
         if (!ModelState.IsValid) return BadRequest("Information saknas, kontrollera så att allt stämmer");
 
@@ -134,14 +134,16 @@ public class CourseController : ControllerBase
         await _context.Courses.AddAsync(course);
         if (await _context.SaveChangesAsync() > 0)
         {
-            return CreatedAtAction(nameof(GetById), new { id = course.Id });
+            return CreatedAtAction(nameof(GetById),
+            new { id = course.Id },
+            new { id = course.Id, Course = course.CourseTitle });
         }
 
         return StatusCode(500, "Internal Server Error");
     }
 
     [HttpPut("{id}")]
-    public async Task<ActionResult> UpdateCourse(int id, CourseUpdateViewModel model)
+    public async Task<ActionResult> UpdateCourse(int id, CourseAddUpdateViewModel model)
     {
         if (!ModelState.IsValid) return BadRequest("Information saknas");
 

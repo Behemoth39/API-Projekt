@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace westcoasteducation.api.ViewModels;
 
-public class TeacherAddViewModel
+public class StudentAddUpdateViewModel
 {
     [Required(ErrorMessage = "Ålder måste finnas")]
     public int Age { get; set; }

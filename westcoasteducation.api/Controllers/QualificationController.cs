@@ -7,7 +7,7 @@ using westcoasteducation.api.ViewModels;
 namespace westcoasteducation.api.Controllers
 {
     [ApiController]
-    [Route("api/v1/qualifications")]
+    [Route("api/v1/qualifications")]  // Ej testad eller fullt implementerad
     public class QualificationController : ControllerBase
     {
         private readonly WestCoastEducationContext _context;

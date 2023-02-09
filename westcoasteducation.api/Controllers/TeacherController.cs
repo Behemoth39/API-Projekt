@@ -7,7 +7,7 @@ using westcoasteducation.api.ViewModels;
 namespace westcoasteducation.api.Controllers;
 
 [ApiController]
-[Route("api/v1/teachers")]
+[Route("api/v1/teachers")] // Alla Get ger ok tillbaka oavsett om det finns data eller ej
 public class TeacherController : ControllerBase
 {
     public WestCoastEducationContext _context { get; }
@@ -20,15 +20,14 @@ public class TeacherController : ControllerBase
     public async Task<ActionResult> List()
     {
         var result = await _context.Teachers
-        .Select(t => new TeacherListViewModel
+        .Select(t => new
         {
             Age = t.Age,
             FirstName = t.FirstName,
             LastName = t.LastName,
             Email = t.Email,
             Phone = t.Phone,
-            Courses = t.Courses!.Select(clv => new CourseListViewModel { CourseTitle = clv.CourseTitle }).ToList(),
-            Qualifications = t.Qualifications!.Select(qlv => new QualificationVIewModel { Qualification = qlv.Qualification }).ToList(),
+            Courses = t.Courses!.Select(clv => new { CourseTitle = clv.CourseTitle }).ToList()
         })
         .ToListAsync();
         return Ok(result);
@@ -40,13 +39,13 @@ public class TeacherController : ControllerBase
         var result = await _context.Teachers
         .Select(t => new TeacherListViewModel
         {
+            Id = t.Id,
             Age = t.Age,
             FirstName = t.FirstName,
             LastName = t.LastName,
             Email = t.Email,
             Phone = t.Phone,
-            Courses = t.Courses!.Select(clv => new CourseListViewModel { CourseTitle = clv.CourseTitle }).ToList(),
-            Qualifications = t.Qualifications!.Select(qlv => new QualificationVIewModel { Qualification = qlv.Qualification }).ToList(),
+            Courses = t.Courses!.Select(clv => new CourseListViewModel { CourseTitle = clv.CourseTitle }).ToList()
         })
         .SingleOrDefaultAsync(t => t.Id == id);
         return Ok(result);
@@ -63,15 +62,14 @@ public class TeacherController : ControllerBase
             LastName = t.LastName,
             Email = t.Email,
             Phone = t.Phone,
-            Courses = t.Courses!.Select(clv => new CourseListViewModel { CourseTitle = clv.CourseTitle }).ToList(),
-            Qualifications = t.Qualifications!.Select(qlv => new QualificationVIewModel { Qualification = qlv.Qualification }).ToList(),
+            Courses = t.Courses!.Select(clv => new CourseListViewModel { CourseTitle = clv.CourseTitle }).ToList()
         })
         .SingleOrDefaultAsync(t => t.Email!.ToUpper().Trim() == email.ToUpper().Trim());
         return Ok(result);
     }
 
     [HttpPost()]
-    public async Task<ActionResult> AddTeacher(TeacherAddViewModel model) //behövs 2 separata models för update och add
+    public async Task<ActionResult> AddTeacher(TeacherAddUpdateViewModel model) //2 separata models för update och add behövs inte
     {
         if (!ModelState.IsValid) return BadRequest("Information saknas, kontrollera så att allt stämmer");
 
@@ -93,14 +91,14 @@ public class TeacherController : ControllerBase
         {
             return CreatedAtAction(nameof(GetById),
             new { id = teacher.Id },
-            new { id = teacher.Id, Name = teacher.FirstName + teacher.LastName }); // testa
+            new { id = teacher.Id, Name = teacher.FirstName + "" + teacher.LastName });
         }
 
         return StatusCode(500, "Internal Server Error");
     }
 
     [HttpPut("{id}")]
-    public async Task<ActionResult> UpdateTeacher(int id, TeacherUpdateViewModel model) //behövs 2 separata models för update och add
+    public async Task<ActionResult> UpdateTeacher(int id, TeacherAddUpdateViewModel model)
     {
         if (!ModelState.IsValid) return BadRequest("Information saknas");
 
@@ -122,8 +120,8 @@ public class TeacherController : ControllerBase
         return StatusCode(500, "Internal Server Error");
     }
 
-    [HttpGet("{id}")]
-    public async Task<ActionResult> ListTaughtCourses(int id)
+    [HttpGet("taught/{id}")]
+    public async Task<ActionResult> ListTaughtCourses(int id)  // se över
     {
         var teacher = await _context.Teachers.FindAsync(id);
         if (teacher is null) return BadRequest($"Kunde inte hitta läraren i systemet");
@@ -131,13 +129,13 @@ public class TeacherController : ControllerBase
         var result = await _context.Teachers
        .Select(t => new TeacherListViewModel
        {
-           Courses = t.Courses!.Select(clv => new CourseListViewModel { CourseTitle = clv.CourseTitle }).ToList()
+           Courses = t.Courses!.Select(clv => new CourseListViewModel { CourseTitle = clv.CourseTitle }).ToList() // visar för mycket
        })
        .ToListAsync();
         return Ok(result);
     }
 
-    [HttpPatch("registertocourse/{id}")] // namnge bättre
+    [HttpPatch("registertocourse/{courseId}/{teacherId}")]
     public async Task<ActionResult> RegisterToCourse(int courseId, int teacherId)
     {
         var course = await _context.Courses.FindAsync(courseId);
@@ -183,7 +181,7 @@ public class TeacherController : ControllerBase
     public async Task<ActionResult> DeleteTeacher(int id)
     {
         var teacher = await _context.Teachers.FindAsync(id);
-        if (teacher is null) return NotFound($"Finns ingen kurs med id: {id}");
+        if (teacher is null) return NotFound($"Finns ingen lärare med id: {id}");
 
         _context.Teachers.Remove(teacher);
         if (await _context.SaveChangesAsync() > 0)

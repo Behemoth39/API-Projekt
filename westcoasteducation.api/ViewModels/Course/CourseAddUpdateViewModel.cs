@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace westcoasteducation.api.ViewModels;
 
-public class CourseUpdateViewModel
+public class CourseAddUpdateViewModel
 {
     [Required(ErrorMessage = "Kursnummer måste finnas")]
     public string CourseNumber { get; set; }

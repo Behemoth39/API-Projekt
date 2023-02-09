@@ -41,7 +41,7 @@ namespace westcoasteducation.api.Controllers
             return Ok(result);
         }
 
-        [HttpGet("{name}")]
+        [HttpGet("name/{name}")]
         public async Task<ActionResult> GetByName(string name)
         {
             var result = await _context.Qualifications
@@ -70,7 +70,7 @@ namespace westcoasteducation.api.Controllers
             await _context.Qualifications.AddAsync(qualification);
             if (await _context.SaveChangesAsync() > 0)
             {
-                return Created(nameof(GetById), new { id = qualification.Id });
+                return CreatedAtAction(nameof(GetById), new { id = qualification.Id });
             }
 
             return StatusCode(500, "Internal Server Error");
@@ -95,8 +95,8 @@ namespace westcoasteducation.api.Controllers
             return StatusCode(500, "Internal Server Error");
         }
 
-        [HttpPatch("{id}")]
-        public async Task<ActionResult> AddQualificationToTeacher(int id) // förmodligen ska en model följa med
+        [HttpPatch("{id}")] // namnge bättre
+        public async Task<ActionResult> AddQualificationToTeacher(int id)
         {
             var qualification = await _context.Qualifications.FindAsync(id);
             if (qualification is null) return NotFound($"Finns ingen kompetens med id: {id}");
@@ -111,8 +111,8 @@ namespace westcoasteducation.api.Controllers
             return StatusCode(500, "Internal Server Error");
         }
 
-        [HttpPatch("{id}")]
-        public async Task<ActionResult> RemoveQualificationFromTeacher(int id) // förmodligen ska en model följa med
+        [HttpPatch("{id}")] // namnge bättre
+        public async Task<ActionResult> RemoveQualificationFromTeacher(int id)
         {
             var qualification = await _context.Qualifications.FindAsync(id);
             if (qualification is null) return NotFound($"Finns ingen kompetens med id: {id}");

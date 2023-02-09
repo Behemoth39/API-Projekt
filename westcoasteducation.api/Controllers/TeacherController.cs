@@ -91,7 +91,9 @@ public class TeacherController : ControllerBase
         await _context.Teachers.AddAsync(teacher);
         if (await _context.SaveChangesAsync() > 0)
         {
-            return Created(nameof(GetById), new { id = teacher.Id });
+            return CreatedAtAction(nameof(GetById),
+            new { id = teacher.Id },
+            new { id = teacher.Id, Name = teacher.FirstName + teacher.LastName }); // testa
         }
 
         return StatusCode(500, "Internal Server Error");
@@ -120,9 +122,12 @@ public class TeacherController : ControllerBase
         return StatusCode(500, "Internal Server Error");
     }
 
-    [HttpGet()]
-    public async Task<ActionResult> ListTaughtCourses()
+    [HttpGet("{id}")]
+    public async Task<ActionResult> ListTaughtCourses(int id)
     {
+        var teacher = await _context.Teachers.FindAsync(id);
+        if (teacher is null) return BadRequest($"Kunde inte hitta läraren i systemet");
+
         var result = await _context.Teachers
        .Select(t => new TeacherListViewModel
        {
@@ -132,14 +137,19 @@ public class TeacherController : ControllerBase
         return Ok(result);
     }
 
-    [HttpPatch("registertocourse /{id}")]
-    public async Task<ActionResult> RegisterToCourse(int id) // förmodligen ska en model följa med
+    [HttpPatch("registertocourse/{id}")] // namnge bättre
+    public async Task<ActionResult> RegisterToCourse(int courseId, int teacherId)
     {
-        var teacher = await _context.Teachers.FindAsync(id);
-        if (teacher is null) return NotFound($"Finns ingen lärare med id: {id}");
-        // sätt värdet här
+        var course = await _context.Courses.FindAsync(courseId);
+        if (course is null) return BadRequest("Kunde inte hitta kursen i systemet.");
 
-        _context.Teachers.Update(teacher);
+        var teacher = await _context.Teachers.FindAsync(teacherId);
+        if (teacher is null) return BadRequest($"Kunde inte hitta läraren i systemet");
+
+        course.Teacher = teacher;
+
+        _context.Courses.Update(course);
+
         if (await _context.SaveChangesAsync() > 0)
         {
             return NoContent();
@@ -148,14 +158,19 @@ public class TeacherController : ControllerBase
         return StatusCode(500, "Internal Server Error");
     }
 
-    [HttpPatch("removefromcourse/{id}")]
-    public async Task<ActionResult> RemoveFromCourse(int id) // förmodligen ska en model följa med
+    [HttpPatch("removefromcourse/{courseId}/{teacherId}")]
+    public async Task<ActionResult> RemoveFromCourse(int courseId, int teacherId)
     {
-        var teacher = await _context.Teachers.FindAsync(id);
-        if (teacher is null) return NotFound($"Finns ingen lärare med id: {id}");
-        // sätt värdet här
+        var course = await _context.Courses.FindAsync(courseId);
+        if (course is null) return BadRequest("kursen är inte i systemet.");
 
-        _context.Teachers.Update(teacher);
+        var teacher = await _context.Teachers.FindAsync(teacherId);
+        if (teacher is null) return BadRequest($"läraren är inte i systemet");
+
+        course.Teacher = null; // funkar ?
+
+        _context.Courses.Update(course);
+
         if (await _context.SaveChangesAsync() > 0)
         {
             return NoContent();

@@ -21,13 +21,13 @@ public class CourseController : ControllerBase
     {
         var result = await _context.Courses
         .Include(t => t.Teacher)
-        .Select(c => new CourseListViewModel
+        .Select(c => new
         {
             CourseTitle = c.CourseTitle,
             CourseStartDate = c.CourseStartDate,
             CourseEndDate = c.CourseEndDate,
-            Teacher = c.Teacher.FirstName,
-            Students = c.Students!.Select(slv => new StudentListViewModel { FirstName = slv.FirstName }).ToList(),
+            Teacher = c.Teacher.FirstName + " " + c.Teacher.LastName,
+            StudentList = c.Students!.Select(slv => new { FirstName = slv.FirstName + " " + slv.LastName }).ToList(),
         })
         .ToListAsync();
         return Ok(result);
@@ -46,7 +46,7 @@ public class CourseController : ControllerBase
             CourseTitle = c.CourseTitle,
             CourseStartDate = c.CourseStartDate,
             CourseEndDate = c.CourseEndDate,
-            Teacher = c.Teacher.Email,
+            Teacher = c.Teacher.FirstName + " " + c.Teacher.LastName,
             Students = c.Students!.Select(slv => new StudentListViewModel { Email = slv.Email }).ToList()
         })
         .SingleOrDefaultAsync(C => C.Id == id);
@@ -66,7 +66,7 @@ public class CourseController : ControllerBase
             CourseTitle = c.CourseTitle,
             CourseStartDate = c.CourseStartDate,
             CourseEndDate = c.CourseEndDate,
-            Teacher = c.Teacher.Email,
+            Teacher = c.Teacher.FirstName + " " + c.Teacher.LastName,
             Students = c.Students!.Select(slv => new StudentListViewModel { Email = slv.Email }).ToList()
         })
         .SingleOrDefaultAsync(C => C.CourseNumber!.ToUpper().Trim() == courseNr.ToUpper().Trim());
@@ -86,7 +86,7 @@ public class CourseController : ControllerBase
             CourseTitle = c.CourseTitle,
             CourseStartDate = c.CourseStartDate,
             CourseEndDate = c.CourseEndDate,
-            Teacher = c.Teacher.Email,
+            Teacher = c.Teacher.FirstName + " " + c.Teacher.LastName,
             Students = c.Students!.Select(slv => new StudentListViewModel { Email = slv.Email }).ToList()
         })
         .SingleOrDefaultAsync(C => C.CourseTitle!.ToUpper().Trim() == courseTitle.ToUpper().Trim());
@@ -107,7 +107,7 @@ public class CourseController : ControllerBase
             CourseTitle = c.CourseTitle,
             CourseStartDate = c.CourseStartDate,
             CourseEndDate = c.CourseEndDate,
-            Teacher = c.Teacher.Email,
+            Teacher = c.Teacher.FirstName + " " + c.Teacher.LastName,
             Students = c.Students!.Select(slv => new StudentListViewModel { Email = slv.Email }).ToList()
         })
         .ToListAsync();
@@ -134,7 +134,7 @@ public class CourseController : ControllerBase
         await _context.Courses.AddAsync(course);
         if (await _context.SaveChangesAsync() > 0)
         {
-            return Created(nameof(GetById), new { id = course.Id });
+            return CreatedAtAction(nameof(GetById), new { id = course.Id });
         }
 
         return StatusCode(500, "Internal Server Error");

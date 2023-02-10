@@ -21,7 +21,7 @@ public class StudentController : ControllerBase
     {
         var result = await _context.Students
         .Include(c => c.Course)
-        .Select(s => new
+        .Select(s => new StudentDetailListViewModel
         {
             Id = s.Id,
             Age = s.Age,

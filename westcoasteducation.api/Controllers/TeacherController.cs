@@ -20,14 +20,14 @@ public class TeacherController : ControllerBase
     public async Task<ActionResult> List()
     {
         var result = await _context.Teachers
-        .Select(t => new
+        .Select(t => new TeacherListViewModel
         {
             Age = t.Age,
             FirstName = t.FirstName,
             LastName = t.LastName,
             Email = t.Email,
             Phone = t.Phone,
-            Courses = t.Courses!.Select(clv => new { CourseTitle = clv.CourseTitle }).ToList() // Funkar ej 
+            Courses = t.Courses!.Select(clv => new CourseListViewModel { CourseTitle = clv.CourseTitle }).ToList()
         })
         .ToListAsync();
         return Ok(result);
@@ -45,7 +45,7 @@ public class TeacherController : ControllerBase
             LastName = t.LastName,
             Email = t.Email,
             Phone = t.Phone,
-            Courses = t.Courses!.Select(clv => new CourseListViewModel { CourseTitle = clv.CourseTitle }).ToList() // Funkar ej 
+            Courses = t.Courses!.Select(clv => new CourseListViewModel { CourseTitle = clv.CourseTitle }).ToList()
         })
         .SingleOrDefaultAsync(t => t.Id == id);
         return Ok(result);
@@ -63,7 +63,7 @@ public class TeacherController : ControllerBase
             LastName = t.LastName,
             Email = t.Email,
             Phone = t.Phone,
-            Courses = t.Courses!.Select(clv => new CourseListViewModel { CourseTitle = clv.CourseTitle }).ToList() // Funkar ej 
+            Courses = t.Courses!.Select(clv => new CourseListViewModel { CourseTitle = clv.CourseTitle }).ToList()
         })
         .SingleOrDefaultAsync(t => t.Email!.ToUpper().Trim() == email.ToUpper().Trim());
         return Ok(result);

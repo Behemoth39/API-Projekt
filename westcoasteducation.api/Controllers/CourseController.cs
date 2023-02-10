@@ -21,12 +21,15 @@ public class CourseController : ControllerBase
     {
         var result = await _context.Courses
         .Include(t => t.Teacher)
-        .Select(c => new CourseListViewModel
+        .Select(c => new CourseDetailListViewModel
         {
+            Id = c.Id,
+            Status = c.Status,
+            CourseNumber = c.CourseNumber,
             CourseTitle = c.CourseTitle,
             CourseStartDate = c.CourseStartDate,
             CourseEndDate = c.CourseEndDate,
-            Teacher = c.Teacher.FirstName + " " + c.Teacher.LastName, // Funkar ej          
+            Teacher = c.Teacher.FirstName + " " + c.Teacher.LastName,
             Students = c.Students!.Select(slv => new StudentListViewModel { Name = slv.FirstName + " " + slv.LastName, Email = slv.Email }).ToList()
         })
         .ToListAsync();
@@ -48,7 +51,7 @@ public class CourseController : ControllerBase
             CourseTitle = c.CourseTitle,
             CourseStartDate = c.CourseStartDate,
             CourseEndDate = c.CourseEndDate,
-            Teacher = c.Teacher.FirstName + " " + c.Teacher.LastName, // Funkar ej 
+            Teacher = c.Teacher.FirstName + " " + c.Teacher.LastName,
             Students = c.Students!.Select(slv => new StudentListViewModel { Name = slv.FirstName + " " + slv.LastName, Email = slv.Email }).ToList()
         })
         .SingleOrDefaultAsync(C => C.Id == id);
@@ -70,7 +73,7 @@ public class CourseController : ControllerBase
             CourseTitle = c.CourseTitle,
             CourseStartDate = c.CourseStartDate,
             CourseEndDate = c.CourseEndDate,
-            Teacher = c.Teacher.FirstName + " " + c.Teacher.LastName, // Funkar ej 
+            Teacher = c.Teacher.FirstName + " " + c.Teacher.LastName,
             Students = c.Students!.Select(slv => new StudentListViewModel { Name = slv.FirstName + " " + slv.LastName, Email = slv.Email }).ToList()
         })
         .SingleOrDefaultAsync(C => C.CourseNumber!.ToUpper().Trim() == courseNr.ToUpper().Trim());
@@ -92,7 +95,7 @@ public class CourseController : ControllerBase
             CourseTitle = c.CourseTitle,
             CourseStartDate = c.CourseStartDate,
             CourseEndDate = c.CourseEndDate,
-            Teacher = c.Teacher.FirstName + " " + c.Teacher.LastName, // Funkar ej 
+            Teacher = c.Teacher.FirstName + " " + c.Teacher.LastName,
             Students = c.Students!.Select(slv => new StudentListViewModel { Name = slv.FirstName + " " + slv.LastName, Email = slv.Email }).ToList()
         })
         .SingleOrDefaultAsync(C => C.CourseTitle!.ToUpper().Trim() == courseTitle.ToUpper().Trim());
@@ -115,7 +118,7 @@ public class CourseController : ControllerBase
             CourseTitle = c.CourseTitle,
             CourseStartDate = c.CourseStartDate,
             CourseEndDate = c.CourseEndDate,
-            Teacher = c.Teacher.FirstName + " " + c.Teacher.LastName, // Funkar ej 
+            Teacher = c.Teacher.FirstName + " " + c.Teacher.LastName,
             Students = c.Students!.Select(slv => new StudentListViewModel { Name = slv.FirstName + " " + slv.LastName, Email = slv.Email }).ToList()
         })
         .ToListAsync();

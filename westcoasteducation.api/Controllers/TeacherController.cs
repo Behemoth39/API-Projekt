@@ -7,7 +7,7 @@ using westcoasteducation.api.ViewModels;
 namespace westcoasteducation.api.Controllers;
 
 [ApiController]
-[Route("api/v1/teachers")] // Alla Get ger ok tillbaka oavsett om det finns data eller ej
+[Route("api/v1/teachers")]
 public class TeacherController : ControllerBase
 {
     public WestCoastEducationContext _context { get; }
@@ -30,6 +30,8 @@ public class TeacherController : ControllerBase
             Courses = t.Courses!.Select(clv => new CourseListViewModel { CourseTitle = clv.CourseTitle }).ToList()
         })
         .ToListAsync();
+
+        if (result is null) return BadRequest($"Finns inga lärare");
         return Ok(result);
     }
 
@@ -48,6 +50,8 @@ public class TeacherController : ControllerBase
             Courses = t.Courses!.Select(clv => new CourseListViewModel { CourseTitle = clv.CourseTitle }).ToList()
         })
         .SingleOrDefaultAsync(t => t.Id == id);
+
+        if (result is null) return BadRequest($"Finns ingen lärare med id:{id}");
         return Ok(result);
     }
 
@@ -66,6 +70,8 @@ public class TeacherController : ControllerBase
             Courses = t.Courses!.Select(clv => new CourseListViewModel { CourseTitle = clv.CourseTitle }).ToList()
         })
         .SingleOrDefaultAsync(t => t.Email!.ToUpper().Trim() == email.ToUpper().Trim());
+
+        if (result is null) return BadRequest($"Finns ingen lärare med email {email}");
         return Ok(result);
     }
 

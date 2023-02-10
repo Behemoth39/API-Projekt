@@ -7,7 +7,7 @@ using westcoasteducation.api.ViewModels;
 namespace westcoasteducation.api.Controllers;
 
 [ApiController]
-[Route("api/v1/courses")]  // Alla Get ger ok tillbaka oavsett om det finns data eller ej
+[Route("api/v1/courses")]
 public class CourseController : ControllerBase
 {
     public WestCoastEducationContext _context { get; }

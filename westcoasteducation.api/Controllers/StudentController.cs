@@ -32,6 +32,8 @@ public class StudentController : ControllerBase
             Course = s.Course.CourseTitle
         })
         .ToListAsync();
+
+        if (result is null) return BadRequest($"Finns inga studenter");
         return Ok(result);
     }
 
@@ -51,6 +53,8 @@ public class StudentController : ControllerBase
             Course = s.Course.CourseTitle
         })
         .SingleOrDefaultAsync(s => s.Id == id);
+
+        if (result is null) return BadRequest($"Finns ingen studenter med id:{id}");
         return Ok(result);
     }
 
@@ -70,6 +74,8 @@ public class StudentController : ControllerBase
            Course = s.Course.CourseTitle
        })
        .SingleOrDefaultAsync(t => t.Email!.ToUpper().Trim() == email.ToUpper().Trim());
+
+        if (result is null) return BadRequest($"Finns ingen studenter med email {email}");
         return Ok(result);
     }
 

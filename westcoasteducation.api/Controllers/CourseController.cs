@@ -7,7 +7,7 @@ using westcoasteducation.api.ViewModels;
 namespace westcoasteducation.api.Controllers;
 
 [ApiController]
-[Route("api/v1/courses")]
+[Route("api/v1/courses")] // Error handling is not fully implemented
 public class CourseController : ControllerBase
 {
     public WestCoastEducationContext _context { get; }

@@ -7,7 +7,7 @@ using westcoasteducation.api.ViewModels;
 namespace westcoasteducation.api.Controllers
 {
     [ApiController]
-    [Route("api/v1/qualifications")]  // Ej testad eller fullt implementerad
+    [Route("api/v1/qualifications")]  // Ej testad eller implementerad
     public class QualificationController : ControllerBase
     {
         private readonly WestCoastEducationContext _context;
@@ -95,11 +95,15 @@ namespace westcoasteducation.api.Controllers
             return StatusCode(500, "Internal Server Error");
         }
 
-        [HttpPatch("{id}")] // namnge bättre
-        public async Task<ActionResult> AddQualificationToTeacher(int id)
+        [HttpPatch("qualToTeacher/{qualId}/{teacherId}")] // namnge bättre
+        public async Task<ActionResult> AddQualificationToTeacher(int qualId, int teacherId)
         {
-            var qualification = await _context.Qualifications.FindAsync(id);
-            if (qualification is null) return NotFound($"Finns ingen kompetens med id: {id}");
+            var qualification = await _context.Qualifications.FindAsync(qualId);
+            if (qualification is null) return NotFound($"Kunde inte hitta kompetensen i systemet");
+
+            var teacher = await _context.Teachers.FindAsync(teacherId);
+            if (teacher is null) return BadRequest($"Kunde inte hitta läraren i systemet");
+
             // sätt värdet här
 
             _context.Qualifications.Update(qualification);
@@ -111,11 +115,15 @@ namespace westcoasteducation.api.Controllers
             return StatusCode(500, "Internal Server Error");
         }
 
-        [HttpPatch("{id}")] // namnge bättre
-        public async Task<ActionResult> RemoveQualificationFromTeacher(int id)
+        [HttpPatch("qualFromTeacher/{qualId}/{teacherId}")] // namnge bättre
+        public async Task<ActionResult> RemoveQualificationFromTeacher(int qualId, int teacherId)
         {
-            var qualification = await _context.Qualifications.FindAsync(id);
-            if (qualification is null) return NotFound($"Finns ingen kompetens med id: {id}");
+            var qualification = await _context.Qualifications.FindAsync(qualId);
+            if (qualification is null) return NotFound($"Kunde inte hitta kompetensen i systemet");
+
+            var teacher = await _context.Teachers.FindAsync(teacherId);
+            if (teacher is null) return BadRequest($"Kunde inte hitta läraren i systemet");
+
             // sätt värdet här
 
             _context.Qualifications.Update(qualification);

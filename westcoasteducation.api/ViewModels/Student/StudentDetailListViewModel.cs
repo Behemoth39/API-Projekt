@@ -1,7 +1,6 @@
-namespace westcoasteducation.api.ViewModels.Student
-{
-    public class StudentDetailListViewModel
-    {
+namespace westcoasteducation.api.ViewModels;
 
-    }
+public class StudentDetailListViewModel : PersonViewModel
+{
+    public string Course { get; set; }
 }

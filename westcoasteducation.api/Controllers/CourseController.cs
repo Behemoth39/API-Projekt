@@ -21,15 +21,17 @@ public class CourseController : ControllerBase
     {
         var result = await _context.Courses
         .Include(t => t.Teacher)
-        .Select(c => new
+        .Select(c => new CourseListViewModel
         {
             CourseTitle = c.CourseTitle,
             CourseStartDate = c.CourseStartDate,
             CourseEndDate = c.CourseEndDate,
-            Teacher = c.Teacher.FirstName + " " + c.Teacher.LastName,
-            StudentList = c.Students!.Select(slv => new { FirstName = slv.FirstName + " " + slv.LastName }).ToList(),
+            Teacher = c.Teacher.FirstName + " " + c.Teacher.LastName, // Funkar ej          
+            Students = c.Students!.Select(slv => new StudentListViewModel { Name = slv.FirstName + " " + slv.LastName, Email = slv.Email }).ToList()
         })
         .ToListAsync();
+
+        if (result is null) return BadRequest($"Finns inga kurser");
         return Ok(result);
     }
 
@@ -46,10 +48,12 @@ public class CourseController : ControllerBase
             CourseTitle = c.CourseTitle,
             CourseStartDate = c.CourseStartDate,
             CourseEndDate = c.CourseEndDate,
-            Teacher = c.Teacher.FirstName + " " + c.Teacher.LastName,
-            Students = c.Students!.Select(slv => new StudentListViewModel { Email = slv.Email }).ToList()
+            Teacher = c.Teacher.FirstName + " " + c.Teacher.LastName, // Funkar ej 
+            Students = c.Students!.Select(slv => new StudentListViewModel { Name = slv.FirstName + " " + slv.LastName, Email = slv.Email }).ToList()
         })
         .SingleOrDefaultAsync(C => C.Id == id);
+
+        if (result is null) return BadRequest($"Finns ingen kurs med id:{id}");
         return Ok(result);
     }
 
@@ -66,10 +70,12 @@ public class CourseController : ControllerBase
             CourseTitle = c.CourseTitle,
             CourseStartDate = c.CourseStartDate,
             CourseEndDate = c.CourseEndDate,
-            Teacher = c.Teacher.FirstName + " " + c.Teacher.LastName,
-            Students = c.Students!.Select(slv => new StudentListViewModel { Email = slv.Email }).ToList()
+            Teacher = c.Teacher.FirstName + " " + c.Teacher.LastName, // Funkar ej 
+            Students = c.Students!.Select(slv => new StudentListViewModel { Name = slv.FirstName + " " + slv.LastName, Email = slv.Email }).ToList()
         })
         .SingleOrDefaultAsync(C => C.CourseNumber!.ToUpper().Trim() == courseNr.ToUpper().Trim());
+
+        if (result is null) return BadRequest($"Finns ingen kurs med nr:{courseNr}");
         return Ok(result);
     }
 
@@ -86,10 +92,12 @@ public class CourseController : ControllerBase
             CourseTitle = c.CourseTitle,
             CourseStartDate = c.CourseStartDate,
             CourseEndDate = c.CourseEndDate,
-            Teacher = c.Teacher.FirstName + " " + c.Teacher.LastName,
-            Students = c.Students!.Select(slv => new StudentListViewModel { Email = slv.Email }).ToList()
+            Teacher = c.Teacher.FirstName + " " + c.Teacher.LastName, // Funkar ej 
+            Students = c.Students!.Select(slv => new StudentListViewModel { Name = slv.FirstName + " " + slv.LastName, Email = slv.Email }).ToList()
         })
         .SingleOrDefaultAsync(C => C.CourseTitle!.ToUpper().Trim() == courseTitle.ToUpper().Trim());
+
+        if (result is null) return BadRequest($"Finns ingen kurs med titel {courseTitle}");
         return Ok(result);
     }
 
@@ -107,10 +115,12 @@ public class CourseController : ControllerBase
             CourseTitle = c.CourseTitle,
             CourseStartDate = c.CourseStartDate,
             CourseEndDate = c.CourseEndDate,
-            Teacher = c.Teacher.FirstName + " " + c.Teacher.LastName,
-            Students = c.Students!.Select(slv => new StudentListViewModel { Email = slv.Email }).ToList()
+            Teacher = c.Teacher.FirstName + " " + c.Teacher.LastName, // Funkar ej 
+            Students = c.Students!.Select(slv => new StudentListViewModel { Name = slv.FirstName + " " + slv.LastName, Email = slv.Email }).ToList()
         })
         .ToListAsync();
+
+        if (result is null) return BadRequest($"Finns ingen kurs med startdatum {startDate}"); // funkar inte som tänkt än
         return Ok(result);
     }
 

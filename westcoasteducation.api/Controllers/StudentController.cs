@@ -40,7 +40,7 @@ public class StudentController : ControllerBase
     {
         var result = await _context.Students
         .Include(c => c.Course)
-        .Select(s => new StudentListViewModel
+        .Select(s => new StudentDetailListViewModel
         {
             Id = s.Id,
             Age = s.Age,
@@ -59,7 +59,7 @@ public class StudentController : ControllerBase
     {
         var result = await _context.Students
        .Include(c => c.Course)
-       .Select(s => new StudentListViewModel
+       .Select(s => new StudentDetailListViewModel
        {
            Id = s.Id,
            Age = s.Age,
@@ -73,7 +73,7 @@ public class StudentController : ControllerBase
         return Ok(result);
     }
 
-    [HttpPost()] // funkar inte riktigt fullt ut
+    [HttpPost()]
     public async Task<ActionResult> AddStudent(StudentAddUpdateViewModel model)
     {
         if (!ModelState.IsValid) return BadRequest("Information saknas, kontrollera så att allt stämmer");
@@ -125,21 +125,6 @@ public class StudentController : ControllerBase
         return StatusCode(500, "Internal Server Error");
     }
 
-    [HttpGet("takencourses/{id}")]
-    public async Task<ActionResult> ListCoursesTaken(int id)
-    {
-        var student = await _context.Students.FindAsync(id);
-        if (student is null) return BadRequest($"Kunde inte hitta läraren i systemet");
-
-        var result = await _context.Students
-       .Select(t => new StudentListViewModel
-       {
-           // inte klar
-       })
-       .ToListAsync();
-        return Ok(result);
-    }
-
     [HttpPatch("registertocourse/{courseId}/{studentId}")]
     public async Task<ActionResult> RegisterToCourse(int courseId, int studentId)
     {
@@ -147,7 +132,7 @@ public class StudentController : ControllerBase
         if (course is null) return BadRequest("Kunde inte hitta kursen i systemet.");
 
         var student = await _context.Students.FindAsync(studentId);
-        if (student is null) return BadRequest($"Kunde inte hitta läraren i systemet");
+        if (student is null) return BadRequest($"Kunde inte hitta studenten i systemet");
 
         student.Course = course;
 
@@ -168,7 +153,7 @@ public class StudentController : ControllerBase
         if (course is null) return BadRequest("Kunde inte hitta kursen i systemet.");
 
         var student = await _context.Students.FindAsync(studentId);
-        if (student is null) return BadRequest($"Kunde inte hitta läraren i systemet");
+        if (student is null) return BadRequest($"Kunde inte hitta studenten i systemet");
 
         student.Course = null;
 

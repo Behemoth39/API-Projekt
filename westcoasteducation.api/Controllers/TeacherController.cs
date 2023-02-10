@@ -27,7 +27,7 @@ public class TeacherController : ControllerBase
             LastName = t.LastName,
             Email = t.Email,
             Phone = t.Phone,
-            Courses = t.Courses!.Select(clv => new { CourseTitle = clv.CourseTitle }).ToList()
+            Courses = t.Courses!.Select(clv => new { CourseTitle = clv.CourseTitle }).ToList() // Funkar ej 
         })
         .ToListAsync();
         return Ok(result);
@@ -45,7 +45,7 @@ public class TeacherController : ControllerBase
             LastName = t.LastName,
             Email = t.Email,
             Phone = t.Phone,
-            Courses = t.Courses!.Select(clv => new CourseListViewModel { CourseTitle = clv.CourseTitle }).ToList()
+            Courses = t.Courses!.Select(clv => new CourseListViewModel { CourseTitle = clv.CourseTitle }).ToList() // Funkar ej 
         })
         .SingleOrDefaultAsync(t => t.Id == id);
         return Ok(result);
@@ -55,6 +55,7 @@ public class TeacherController : ControllerBase
     public async Task<ActionResult> GetByEmail(string email)
     {
         var result = await _context.Teachers
+        .Include(c => c.Courses)
         .Select(t => new TeacherListViewModel
         {
             Age = t.Age,
@@ -62,14 +63,14 @@ public class TeacherController : ControllerBase
             LastName = t.LastName,
             Email = t.Email,
             Phone = t.Phone,
-            Courses = t.Courses!.Select(clv => new CourseListViewModel { CourseTitle = clv.CourseTitle }).ToList()
+            Courses = t.Courses!.Select(clv => new CourseListViewModel { CourseTitle = clv.CourseTitle }).ToList() // Funkar ej 
         })
         .SingleOrDefaultAsync(t => t.Email!.ToUpper().Trim() == email.ToUpper().Trim());
         return Ok(result);
     }
 
     [HttpPost()]
-    public async Task<ActionResult> AddTeacher(TeacherAddUpdateViewModel model) //2 separata models för update och add behövs inte
+    public async Task<ActionResult> AddTeacher(TeacherAddUpdateViewModel model)
     {
         if (!ModelState.IsValid) return BadRequest("Information saknas, kontrollera så att allt stämmer");
 
@@ -120,21 +121,6 @@ public class TeacherController : ControllerBase
         return StatusCode(500, "Internal Server Error");
     }
 
-    [HttpGet("taught/{id}")]
-    public async Task<ActionResult> ListTaughtCourses(int id)  // se över
-    {
-        var teacher = await _context.Teachers.FindAsync(id);
-        if (teacher is null) return BadRequest($"Kunde inte hitta läraren i systemet");
-
-        var result = await _context.Teachers
-       .Select(t => new TeacherListViewModel
-       {
-           Courses = t.Courses!.Select(clv => new CourseListViewModel { CourseTitle = clv.CourseTitle }).ToList() // visar för mycket
-       })
-       .ToListAsync();
-        return Ok(result);
-    }
-
     [HttpPatch("registertocourse/{courseId}/{teacherId}")]
     public async Task<ActionResult> RegisterToCourse(int courseId, int teacherId)
     {
@@ -165,7 +151,7 @@ public class TeacherController : ControllerBase
         var teacher = await _context.Teachers.FindAsync(teacherId);
         if (teacher is null) return BadRequest($"läraren är inte i systemet");
 
-        course.Teacher = null; // funkar ?
+        course.Teacher = null;
 
         _context.Courses.Update(course);
 
